@@ -72,14 +72,14 @@ in-docker-install-lowest:
 	composer update --no-progress --no-suggest --prefer-stable --prefer-lowest --optimize-autoloader --ansi
 
 in-docker-test:
-	SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit --verbose
-	SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit --verbose --configuration phpunit/pgsql.xml
-	SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit --verbose --configuration phpunit/mysql.xml
+	SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit
+	SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit --configuration phpunit/pgsql.xml
+	SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit --configuration phpunit/mysql.xml
 
 in-docker-test-coverage:
-	SYMFONY_DEPRECATIONS_HELPER=weak phpdbg -qrr vendor/bin/phpunit --verbose --coverage-php build/cov/coverage-phpunit.cov
-	SYMFONY_DEPRECATIONS_HELPER=weak phpdbg -qrr vendor/bin/phpunit --verbose --configuration phpunit/pgsql.xml --coverage-php build/cov/coverage-phpunit-pgsql.cov
-	SYMFONY_DEPRECATIONS_HELPER=weak phpdbg -qrr vendor/bin/phpunit --verbose --configuration phpunit/mysql.xml --coverage-php build/cov/coverage-phpunit-mysql.cov
+	SYMFONY_DEPRECATIONS_HELPER=weak phpdbg -qrr vendor/bin/phpunit --coverage-php build/cov/coverage-phpunit.cov
+	SYMFONY_DEPRECATIONS_HELPER=weak phpdbg -qrr vendor/bin/phpunit --configuration phpunit/pgsql.xml --coverage-php build/cov/coverage-phpunit-pgsql.cov
+	SYMFONY_DEPRECATIONS_HELPER=weak phpdbg -qrr vendor/bin/phpunit --configuration phpunit/mysql.xml --coverage-php build/cov/coverage-phpunit-mysql.cov
 
 ensure:
 	mkdir -p ${HOME}/.composer /tmp/tmp-phpqa-$(shell id -u)

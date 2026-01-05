@@ -21,7 +21,6 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\Warning;
 use Psr\SimpleCache\CacheInterface;
 use Rollerworks\Component\Search\Doctrine\Dbal\Tests\DbalExtensions\Connection;
 use Rollerworks\Component\Search\Doctrine\Dbal\Tests\TestUtil;
@@ -75,6 +74,10 @@ abstract class OrmTestCase extends DbalTestCase
 
         if (! isset(self::$sharedConn)) {
             $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Fixtures/Entity'], true, null, null);
+
+            if (method_exists($config, 'enableNativeLazyObjects') && \PHP_VERSION_ID >= 80400) {
+                $config->enableNativeLazyObjects(true);
+            }
 
             self::$sharedConn = TestUtil::getConnection();
             self::$sharedEm = new EntityManager(self::$sharedConn, $config);
@@ -240,11 +243,11 @@ abstract class OrmTestCase extends DbalTestCase
         self::assertEquals($parameters, $actualParameters);
     }
 
-    protected function onNotSuccessfulTest(\Throwable $e): void
+    protected function onNotSuccessfulTest(\Throwable $t): never
     {
         // Ignore deprecation warnings.
-        if ($e instanceof AssertionFailedError || ($e instanceof Warning && mb_strpos($e->getMessage(), ' is deprecated,'))) {
-            throw $e;
+        if ($t instanceof AssertionFailedError) {
+            throw $t;
         }
 
         $i = \count(self::$sharedConn->queryLog->queries ?? []);
@@ -268,7 +271,7 @@ abstract class OrmTestCase extends DbalTestCase
                 --$i;
             }
 
-            $trace = $e->getTrace();
+            $trace = $t->getTrace();
             $traceMsg = '';
 
             foreach ($trace as $part) {
@@ -283,17 +286,17 @@ abstract class OrmTestCase extends DbalTestCase
             }
 
             $message =
-                '[' . $e::class . '] ' .
-                $e->getMessage() .
+                '[' . $t::class . '] ' .
+                $t->getMessage() .
                 \PHP_EOL . \PHP_EOL .
                 'With queries:' . \PHP_EOL .
                 $queries . \PHP_EOL .
                 'Trace:' . \PHP_EOL .
                 $traceMsg;
 
-            throw new Exception($message, (int) $e->getCode(), $e instanceof \Exception ? $e : null);
+            throw new Exception($message, (int) $t->getCode(), $t instanceof \Exception ? $t : null);
         }
 
-        throw $e;
+        throw $t;
     }
 }

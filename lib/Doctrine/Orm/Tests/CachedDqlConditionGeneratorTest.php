@@ -227,10 +227,19 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
     /** @test */
     public function cannot_apply_multiple_times(): void
     {
+        set_error_handler(
+            static function ($errno, $errstr): void {
+                restore_error_handler();
+
+                throw new \Exception($errstr, $errno);
+            },
+            \E_ALL
+        );
+
         $this->conditionGenerator->apply();
 
-        $this->expectWarning();
-        $this->expectWarningMessage('SearchCondition was already applied. Ignoring operation.');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('SearchCondition was already applied. Ignoring operation.');
 
         $this->conditionGenerator->apply();
     }

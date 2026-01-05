@@ -120,9 +120,14 @@ jobs:
                         symfony-version: '^7.4'
 
                     -
-                        php-version: '8.5'
+                        php-version: '8.4'
                         composer-options: '--prefer-stable'
                         symfony-version: '^7.4'
+
+                    -
+                        php-version: '8.4'
+                        composer-options: '--prefer-stable'
+                        symfony-version: '^8.0'
 
         services:
             # https://docs.docker.com/samples/library/postgres/
@@ -203,6 +208,6 @@ jobs:
                 env:
                     SYMFONY_DEPRECATIONS_HELPER: weak
                 run: |
-                    vendor/bin/phpunit --verbose --configuration phpunit.xml.dist
-                    vendor/bin/phpunit --verbose --configuration phpunit/pgsql.xml
-                    vendor/bin/phpunit --verbose --configuration phpunit/mysql.xml
+                    vendor/bin/phpunit --configuration phpunit.xml.dist
+                    vendor/bin/phpunit --configuration phpunit/pgsql.xml
+                    vendor/bin/phpunit --configuration phpunit/mysql.xml
