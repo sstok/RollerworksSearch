@@ -110,10 +110,6 @@ jobs:
             matrix:
                 include:
                     -
-                        php-version: '8.1'
-                        composer-options: '--prefer-stable'
-                        symfony-version: '^6.4'
-                    -
                         php-version: '8.2'
                         composer-options: '--prefer-stable'
                         symfony-version: '^6.4'
@@ -121,12 +117,12 @@ jobs:
                     -
                         php-version: '8.2'
                         composer-options: '--prefer-stable'
-                        symfony-version: '^7.0'
+                        symfony-version: '^7.4'
 
                     -
-                        php-version: '8.3'
+                        php-version: '8.5'
                         composer-options: '--prefer-stable'
-                        symfony-version: '^7.0'
+                        symfony-version: '^7.4'
 
         services:
             # https://docs.docker.com/samples/library/postgres/
