@@ -1,3 +1,11 @@
+UPGRADE FROM 2.0-BETA9 to 2.0-BETA10
+===================================
+
+### Api-Platform
+
+ * Support for Api-Platform 2.4 was dropped, you need at least 4.2.
+   Older beta packages can be used if support is required.
+
 UPGRADE FROM 2.0-BETA6 to 2.0-BETA9
 ===================================
 
