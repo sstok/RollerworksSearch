@@ -1,9 +1,8 @@
 {
     "name": "rollerworks/search-dev",
-    "type": "project",
     "description": "RollerworksSearch monolith development (use separate packages instead)",
-    "homepage": "https://rollerworks.github.io/",
     "license": "MIT",
+    "type": "project",
     "authors": [
         {
             "name": "Sebastiaan Stok",
@@ -14,15 +13,43 @@
             "homepage": "https://github.com/rollerworks/search/contributors"
         }
     ],
+    "homepage": "https://rollerworks.github.io/",
     "require": {
         "php": ">=8.1",
         "nesbot/carbon": "^2.38 || ^3.0",
-        "psr/container": "^1.0 || ^2.0",
-        "symfony/intl": "^6.4 || ^7.0 || ^8.0",
-        "symfony/options-resolver": "^7.4 || ^8.0",
-        "symfony/property-access": "^6.4 || ^7.0 || ^8.0",
-        "symfony/string": "^6.4 || ^7.0 || ^8.0",
+        "psr/container": "^1.1 || ^2.0",
+        "symfony/intl": "^6.4 || ^7.4 || ^8.0",
+        "symfony/options-resolver": "^6.4 || ^7.4 || ^8.0",
+        "symfony/property-access": "^6.4 || ^7.4 || ^8.0",
+        "symfony/string": "^6.4 || ^7.4 || ^8.0",
         "symfony/translation-contracts": "^3.4"
+    },
+    "require-dev": {
+        "api-platform/core": "^4.2",
+        "doctrine/dbal": "^3.8.0 || ^4.2",
+        "doctrine/doctrine-bundle": "^1.9.1 || ^2.2.3 || ^3.0",
+        "doctrine/orm": "^2.7.3 || ^3.3",
+        "jangregor/phpstan-prophecy": "^2.2",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.1.1 || ^5.1 || ^6.1",
+        "moneyphp/money": "^3.2.0 || ^4.0",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^10.5",
+        "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
+        "rollerscapes/standards": "^0.3",
+        "ruflin/elastica": "^5.0 || ^6.0 || ^7.0",
+        "symfony/asset": "^6.4 || ^7.4 || ^8.0",
+        "symfony/browser-kit": "^6.4 || ^7.4 || ^8.0",
+        "symfony/dom-crawler": "^6.4 || ^7.4 || ^8.0",
+        "symfony/finder": "^6.4 || ^7.4 || ^8.0",
+        "symfony/framework-bundle": "^6.4 || ^7.4 || ^8.0",
+        "symfony/http-foundation": "^6.4 || ^7.4 || ^8.0",
+        "symfony/phpunit-bridge": "^6.4 || ^7.4 || ^8.0",
+        "symfony/routing": "^6.4 || ^7.4 || ^8.0",
+        "symfony/templating": "^6.4 || ^7.4 || ^8.0",
+        "symfony/translation": "^6.4 || ^7.4 || ^8.0",
+        "symfony/twig-bundle": "^6.4 || ^7.4 || ^8.0",
+        "symfony/validator": "^6.4 || ^7.4 || ^8.0",
+        "symfony/var-dumper": "^6.4 || ^7.4 || ^8.0"
     },
     "replace": {
         "rollerworks/search": "self.version",
@@ -36,34 +63,29 @@
     "conflict": {
         "moneyphp/money": "<3.2.0"
     },
-    "require-dev": {
-        "api-platform/core": "^4.2",
-        "doctrine/dbal": "^3.4 || ^4.2",
-        "doctrine/doctrine-bundle": "^1.9.1 || ^2.2.3 || ^3.0",
-        "doctrine/orm": "^2.7.3 || ^3.0",
-        "jangregor/phpstan-prophecy": "^1.0.0",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.1.1 || ^5.1 || ^6.1",
-        "moneyphp/money": "^3.2.0 || ^4.0",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "rollerscapes/standards": "^0.2.4",
-        "phpunit/phpunit": "^10.5",
-        "psr/simple-cache": "^1.0||^2.0.0||^3.0.0",
-        "ruflin/elastica": "^5.0 || ^6.0 || ^7.0",
-        "symfony/asset": "^6.4 || ^7.0 || ^8.0",
-        "symfony/browser-kit": "^6.4 || ^7.0 || ^8.0",
-        "symfony/dom-crawler": "^6.4 || ^7.0 || ^8.0",
-        "symfony/framework-bundle": "^6.4 || ^7.0 || ^8.0",
-        "symfony/http-foundation": "^6.4 || ^7.0 || ^8.0",
-        "symfony/phpunit-bridge": "^6.4 || ^7.0 || ^8.0",
-        "symfony/routing": "^6.4 || ^7.0 || ^8.0",
-        "symfony/templating": "^6.4 || ^7.0 || ^8.0",
-        "symfony/translation": "^6.4 || ^7.0 || ^8.0",
-        "symfony/twig-bundle": "^6.4 || ^7.0 || ^8.0",
-        "symfony/validator": "^6.4 || ^7.0 || ^8.0",
-        "symfony/var-dumper": "^6.4 || ^7.0 || ^8.0"
-    },
     "suggest": {
         "moneyphp/money": "To use the MoneyType"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rollerworks\\Bundle\\SearchBundle\\": "lib/Symfony/SearchBundle",
+            "Rollerworks\\Component\\Search\\": "lib/Core",
+            "Rollerworks\\Component\\Search\\ApiPlatform\\": "lib/ApiPlatform",
+            "Rollerworks\\Component\\Search\\Doctrine\\Dbal\\": "lib/Doctrine/Dbal",
+            "Rollerworks\\Component\\Search\\Doctrine\\Orm\\": "lib/Doctrine/Orm",
+            "Rollerworks\\Component\\Search\\Elasticsearch\\": "lib/Elasticsearch",
+            "Rollerworks\\Component\\Search\\Extension\\Doctrine\\Dbal\\": "lib/Doctrine/Dbal/Extension",
+            "Rollerworks\\Component\\Search\\Extension\\Doctrine\\Orm\\": "lib/Doctrine/Orm/Extension",
+            "Rollerworks\\Component\\Search\\Extension\\Symfony\\Validator\\": "lib/Symfony/Validator"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rollerworks\\Bundle\\SearchBundle\\Tests\\": "lib/Symfony/SearchBundle/Tests",
+            "Rollerworks\\Component\\Search\\Tests\\Doctrine\\Dbal\\": "lib/Doctrine/Dbal/Tests",
+            "Rollerworks\\Component\\Search\\Tests\\Doctrine\\Orm\\": "lib/Doctrine/Orm/Tests",
+            "Rollerworks\\Component\\Search\\Tests\\Elasticsearch\\": "lib/Elasticsearch/Tests"
+        }
     },
     "config": {
         "preferred-install": {
@@ -77,27 +99,6 @@
     "extra": {
         "branch-alias": {
             "dev-main": "2.0-dev"
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "Rollerworks\\Component\\Search\\": "lib/Core",
-            "Rollerworks\\Component\\Search\\ApiPlatform\\": "lib/ApiPlatform",
-            "Rollerworks\\Component\\Search\\Doctrine\\Dbal\\": "lib/Doctrine/Dbal",
-            "Rollerworks\\Component\\Search\\Extension\\Doctrine\\Dbal\\": "lib/Doctrine/Dbal/Extension",
-            "Rollerworks\\Component\\Search\\Doctrine\\Orm\\": "lib/Doctrine/Orm",
-            "Rollerworks\\Component\\Search\\Extension\\Doctrine\\Orm\\": "lib/Doctrine/Orm/Extension",
-            "Rollerworks\\Component\\Search\\Elasticsearch\\": "lib/Elasticsearch",
-            "Rollerworks\\Component\\Search\\Extension\\Symfony\\Validator\\": "lib/Symfony/Validator",
-            "Rollerworks\\Bundle\\SearchBundle\\": "lib/Symfony/SearchBundle"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Rollerworks\\Component\\Search\\Tests\\Elasticsearch\\": "lib/Elasticsearch/Tests",
-            "Rollerworks\\Component\\Search\\Tests\\Doctrine\\Dbal\\": "lib/Doctrine/Dbal/Tests",
-            "Rollerworks\\Component\\Search\\Tests\\Doctrine\\Orm\\": "lib/Doctrine/Orm/Tests",
-            "Rollerworks\\Bundle\\SearchBundle\\Tests\\": "lib/Symfony/SearchBundle/Tests"
         }
     }
 }
