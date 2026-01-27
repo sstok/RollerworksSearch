@@ -14,5 +14,5 @@ understand your PR.
 Additionally:
  - Update the docs (for new features) if needed.
  - Always add tests and ensure they pass.
- - Features and deprecations must be submitted against branch master.
+ - Features and deprecations must be submitted against branch main.
 -->
