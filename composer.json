@@ -1,6 +1,6 @@
 {
-    "name": "rollerworks/search-dev",
-    "description": "RollerworksSearch monolith development (use separate packages instead)",
+    "name": "rollersearch/search-dev",
+    "description": "Rollersearch (former RollerworksSearch) monolith development (use separate packages instead)",
     "license": "MIT",
     "type": "project",
     "authors": [
@@ -53,6 +53,7 @@
     },
     "replace": {
         "rollerworks/search": "self.version",
+        "rollerworks/search-dev": "self.version",
         "rollerworks/search-api-platform": "self.version",
         "rollerworks/search-bundle": "self.version",
         "rollerworks/search-doctrine-dbal": "self.version",
