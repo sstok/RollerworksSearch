@@ -35,10 +35,7 @@ final class CachedConditionGenerator extends AbstractCachedConditionGenerator im
     private QueryBuilder $qb;
     private FieldConfigurationSet $fieldsConfig;
 
-    /**
-     * @param mixed|null $ttl
-     */
-    public function __construct(QueryBuilder $queryBuilder, SearchCondition $searchCondition, Cache $cacheDriver, $ttl = null)
+    public function __construct(QueryBuilder $queryBuilder, SearchCondition $searchCondition, Cache $cacheDriver, \DateInterval|int|null $ttl = null)
     {
         parent::__construct($cacheDriver, $searchCondition, $ttl);
 

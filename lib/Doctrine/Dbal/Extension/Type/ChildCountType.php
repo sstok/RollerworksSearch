@@ -44,7 +44,7 @@ class ChildCountType extends AbstractFieldType
         );
     }
 
-    public function getParent(): ?string
+    public function getParent(): string
     {
         return IntegerType::class;
     }

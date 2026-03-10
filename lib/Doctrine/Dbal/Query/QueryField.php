@@ -26,7 +26,7 @@ use Rollerworks\Component\Search\Field\FieldConfig;
  *
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
  */
-class QueryField implements \Serializable
+class QueryField
 {
     /**
      * @var string
@@ -85,22 +85,6 @@ class QueryField implements \Serializable
         $this->dbTypeName = $dbType;
 
         $this->initConversions($fieldConfig);
-    }
-
-    public function serialize()
-    {
-        return serialize(
-            [
-                'mapping_name' => $this->mappingName,
-                'field' => $this->fieldConfig->getName(),
-                'db_type' => $this->dbTypeName,
-            ]
-        );
-    }
-
-    public function unserialize(string $data): void
-    {
-        // noop
     }
 
     public function __serialize(): array

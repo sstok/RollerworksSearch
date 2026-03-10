@@ -1,0 +1,265 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 2
+			path: lib/Core/Test/FieldTransformationAssertion.php
+
+		-
+			message: '#^Method Rollerworks\\Component\\Search\\Tests\\Extension\\Core\\ChoiceList\\Factory\\DefaultChoiceListFactoryTest\:\:assertScalarListWithCustomValues\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: lib/Core/Tests/Extension/Core/ChoiceList/Factory/DefaultChoiceListFactoryTest.php
+
+		-
+			message: '#^Parameter \#1 \$choices of class Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceListView constructor expects array\<Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceGroupView\|Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceView\>, array\<int, null\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: lib/Core/Tests/Extension/Core/ChoiceList/Factory/PropertyAccessDecoratorTest.php
+
+		-
+			message: '#^Parameter \#1 \$choices of class Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceListView constructor expects array\<Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceGroupView\|Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceView\>, array\<int, string\> given\.$#'
+			identifier: argument.type
+			count: 8
+			path: lib/Core/Tests/Extension/Core/ChoiceList/Factory/PropertyAccessDecoratorTest.php
+
+		-
+			message: '#^Parameter \#2 \$preferredChoices of class Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceListView constructor expects array\<Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceGroupView\|Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceView\>, array\<int, false\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: lib/Core/Tests/Extension/Core/ChoiceList/Factory/PropertyAccessDecoratorTest.php
+
+		-
+			message: '#^Parameter \#2 \$preferredChoices of class Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceListView constructor expects array\<Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceGroupView\|Rollerworks\\Component\\Search\\Extension\\Core\\ChoiceList\\View\\ChoiceView\>, array\<int, true\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: lib/Core/Tests/Extension/Core/ChoiceList/Factory/PropertyAccessDecoratorTest.php
+
+		-
+			message: '#^Parameter &\$query @param\-out type of method Rollerworks\\Component\\Search\\Doctrine\\Dbal\\Query\\QueryGenerator\:\:processCompares\(\) expects array\<string\>, array given\.$#'
+			identifier: paramOut.type
+			count: 2
+			path: lib/Doctrine/Dbal/Query/QueryGenerator.php
+
+		-
+			message: '#^Parameter &\$query @param\-out type of method Rollerworks\\Component\\Search\\Doctrine\\Dbal\\Query\\QueryGenerator\:\:processGroups\(\) expects array\<string\>, array given\.$#'
+			identifier: paramOut.type
+			count: 1
+			path: lib/Doctrine/Dbal/Query/QueryGenerator.php
+
+		-
+			message: '#^Parameter &\$query @param\-out type of method Rollerworks\\Component\\Search\\Doctrine\\Dbal\\Query\\QueryGenerator\:\:processPatternMatchers\(\) expects array\<string\>, array given\.$#'
+			identifier: paramOut.type
+			count: 2
+			path: lib/Doctrine/Dbal/Query/QueryGenerator.php
+
+		-
+			message: '#^Parameter &\$query @param\-out type of method Rollerworks\\Component\\Search\\Doctrine\\Dbal\\Query\\QueryGenerator\:\:processRanges\(\) expects array\<string\>, array given\.$#'
+			identifier: paramOut.type
+			count: 2
+			path: lib/Doctrine/Dbal/Query/QueryGenerator.php
+
+		-
+			message: '#^Parameter &\$query @param\-out type of method Rollerworks\\Component\\Search\\Doctrine\\Dbal\\Query\\QueryGenerator\:\:processSingleValues\(\) expects array\<string\>, array given\.$#'
+			identifier: paramOut.type
+			count: 2
+			path: lib/Doctrine/Dbal/Query/QueryGenerator.php
+
+		-
+			message: '#^Instanceof between Doctrine\\DBAL\\ArrayParameterType\|Doctrine\\DBAL\\ParameterType and UnitEnum will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: lib/Doctrine/Dbal/Test/QueryBuilderAssertion.php
+
+		-
+			message: '#^Result of \|\| is always true\.$#'
+			identifier: booleanOr.alwaysTrue
+			count: 1
+			path: lib/Doctrine/Dbal/Test/QueryBuilderAssertion.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Configuration\:\:setSQLLogger\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/DbalExtensions/Connection.php
+
+		-
+			message: '#^Method Doctrine\\DBAL\\Connection\:\:__construct\(\) invoked with 4 parameters, 2\-3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/DbalExtensions/Connection.php
+
+		-
+			message: '#^Parameter \$params of method Rollerworks\\Component\\Search\\Doctrine\\Dbal\\Tests\\DbalExtensions\\Connection\:\:__construct\(\) has invalid type Doctrine\\DBAL\\Params\.$#'
+			identifier: class.notFound
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/DbalExtensions/Connection.php
+
+		-
+			message: '#^Access to an undefined property Doctrine\\DBAL\\Connection\:\:\$queryLog\.$#'
+			identifier: property.notFound
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Call to function is_a\(\) with arguments ''Doctrine\\\\DBAL\\\\ParameterType'', ''UnitEnum'' and true will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Invalid array key type Doctrine\\DBAL\\ParameterType\:\:ASCII\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Invalid array key type Doctrine\\DBAL\\ParameterType\:\:BINARY\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Invalid array key type Doctrine\\DBAL\\ParameterType\:\:BOOLEAN\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Invalid array key type Doctrine\\DBAL\\ParameterType\:\:INTEGER\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Invalid array key type Doctrine\\DBAL\\ParameterType\:\:LARGE_OBJECT\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Invalid array key type Doctrine\\DBAL\\ParameterType\:\:NULL\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Invalid array key type Doctrine\\DBAL\\ParameterType\:\:STRING\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Functional/FunctionalDbalTestCase.php
+
+		-
+			message: '#^Method Doctrine\\DBAL\\Connection\:\:__construct\(\) invoked with 4 parameters, 2\-3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Mocks/ConnectionMock.php
+
+		-
+			message: '#^Parameter \$params of method Rollerworks\\Component\\Search\\Tests\\Doctrine\\Dbal\\Mocks\\ConnectionMock\:\:__construct\(\) has invalid type Doctrine\\DBAL\\Params\.$#'
+			identifier: class.notFound
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Mocks/ConnectionMock.php
+
+		-
+			message: '#^Property Rollerworks\\Component\\Search\\Tests\\Doctrine\\Dbal\\Mocks\\ConnectionMock\:\:\$_platform is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/Mocks/ConnectionMock.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:getEventManager\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/TestUtil.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:getSchemaManager\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/TestUtil.php
+
+		-
+			message: '#^Call to function method_exists\(\) with ''Doctrine\\\\DBAL\\\\Connection'' and ''createSchemaManager'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: lib/Doctrine/Dbal/Tests/TestUtil.php
+
+		-
+			message: '#^Parameter \#1 \$className of method PHPUnit\\Framework\\TestCase\:\:getMockBuilder\(\) expects class\-string\<Doctrine\\Common\\Cache\\Cache\>, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: lib/Doctrine/Orm/Tests/CachedDqlConditionGeneratorTest.php
+
+		-
+			message: '#^Property Rollerworks\\Component\\Search\\Tests\\Doctrine\\Orm\\CachedDqlConditionGeneratorTest\:\:\$cacheDriver \(PHPUnit\\Framework\\MockObject\\MockObject&Psr\\SimpleCache\\CacheInterface\) does not accept Doctrine\\Common\\Cache\\Cache&PHPUnit\\Framework\\MockObject\\MockObject\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: lib/Doctrine/Orm/Tests/CachedDqlConditionGeneratorTest.php
+
+		-
+			message: '#^Offset ''0'' does not exist on array\<string, Rollerworks\\Component\\Search\\Doctrine\\Orm\\OrmQueryField\>\.$#'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: lib/Doctrine/Orm/Tests/FieldConfigBuilderTest.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Doctrine\\ORM\\Configuration and ''enableNativeLazyObj…'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: lib/Doctrine/Orm/Tests/OrmTestCase.php
+
+		-
+			message: '#^Method Doctrine\\ORM\\Tools\\SchemaTool\:\:updateSchema\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: lib/Doctrine/Orm/Tests/OrmTestCase.php
+
+		-
+			message: '#^Method Rollerworks\\Component\\Search\\Elasticsearch\\FieldMapping\:\:parseProperty\(\) should return array\<string\> but returns array\<string, array\<string, array\<string, array\<string, array\<string, bool\|string\>\|bool\|string\>\|bool\|string\>\|bool\|string\>\|string\|false\|null\>\.$#'
+			identifier: return.type
+			count: 1
+			path: lib/Elasticsearch/FieldMapping.php
+
+		-
+			message: '#^Variable \$nestedBool might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: lib/Elasticsearch/QueryConditionGenerator.php
+
+		-
+			message: '#^PHPDoc tag @var with type Psr\\SimpleCache\\CacheInterface is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: lib/Elasticsearch/Tests/ElasticsearchFactoryTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: lib/Elasticsearch/Tests/QueryConditionGeneratorTest.php
+
+		-
+			message: '#^Method Doctrine\\ORM\\Tools\\SchemaTool\:\:updateSchema\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: lib/Symfony/SearchBundle/Tests/Functional/ApiPlatformTest.php
+
+		-
+			message: '#^Call to method Rollerworks\\Component\\Search\\SearchConditionBuilder\:\:end\(\) on a separate line has no effect\.$#'
+			identifier: method.resultUnused
+			count: 3
+			path: lib/Symfony/SearchBundle/Tests/SearchConditionBuilderTest.php
+
+		-
+			message: '#^Property Rollerworks\\Component\\Search\\Extension\\Symfony\\Validator\\InputValidator\:\:\$errorList is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: lib/Symfony/Validator/InputValidator.php
+
+		-
+			message: '#^Parameter \$min of class Symfony\\Component\\Validator\\Constraints\\Range constructor expects float\|int\|non\-empty\-string\|null, DateTimeImmutable given\.$#'
+			identifier: argument.type
+			count: 1
+			path: lib/Symfony/Validator/Tests/InputValidatorTest.php

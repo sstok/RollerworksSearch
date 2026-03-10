@@ -27,8 +27,8 @@ final class FieldConfigBuilder
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var array<string,array<string,OrmQueryField>> */
-    private $fields = [];
+    /** @var array<string, array<string, OrmQueryField>> ['fieldName'][mappingIndex] => {OrmQueryField} */
+    private array $fields = [];
 
     /** @var string */
     private $defaultEntity;
@@ -55,7 +55,7 @@ final class FieldConfigBuilder
 
         if (mb_strpos($mappingName, '#') !== false) {
             [$fieldName, $mappingIdx] = explode('#', $mappingName, 2);
-            unset($this->fields[$fieldName][null]);
+            unset($this->fields[$fieldName]['']);
         } else {
             $this->fields[$fieldName] = [];
         }
@@ -77,7 +77,7 @@ final class FieldConfigBuilder
     }
 
     /**
-     * @return array<string,array<string,OrmQueryField>>
+     * @return array<string, array<string, OrmQueryField>> ['fieldName'][mappingIndex] => {OrmQueryField}
      */
     public function getFields(): array
     {
@@ -85,7 +85,7 @@ final class FieldConfigBuilder
     }
 
     /**
-     * @return array<int,string>
+     * @return array<int, string>
      */
     private function getEntityAndProperty(string $fieldName, string $entity, string $property): array
     {

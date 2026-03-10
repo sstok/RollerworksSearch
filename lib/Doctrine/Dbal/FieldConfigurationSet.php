@@ -36,7 +36,7 @@ final class FieldConfigurationSet
 
         if (mb_strpos($fieldName, '#') !== false) {
             [$fieldName, $mappingIdx] = explode('#', $fieldName, 2);
-            unset($this->fields[$fieldName][null]);
+            unset($this->fields[$fieldName]['']);
         } else {
             $this->fields[$fieldName] = [];
         }

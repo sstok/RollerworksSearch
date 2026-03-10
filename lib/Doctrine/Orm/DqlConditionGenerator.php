@@ -81,7 +81,7 @@ final class DqlConditionGenerator
     public function getParameters(): ArrayCollection
     {
         if (! isset($this->parameters)) {
-            throw new BadMethodCallException('getParameters() cannot be called before getWhereClause()');
+            throw new BadMethodCallException('getParameters() cannot be called before getWhereClause().');
         }
 
         return $this->parameters;
@@ -104,7 +104,7 @@ final class DqlConditionGenerator
                 throw new BadMethodCallException(\sprintf('Field "%s" is registered as multiple mapping and cannot be used for sorting.', $fieldName));
             }
 
-            $qb->addOrderBy($fields[$fieldName][null]->column, mb_strtoupper($direction));
+            $qb->addOrderBy($fields[$fieldName]['']->column, mb_strtoupper($direction));
         }
     }
 

@@ -30,7 +30,7 @@ class ConnectionMock extends Connection
 
         parent::__construct($params, $driver, $config, $eventManager);
 
-        // Override possible assignment of platform to database platform mock
+        // Override possible assignment of platform to database platform mock (Legacy support for for Doctrine DBAL < 4.0)
         $this->_platform = $this->_platformMock;
     }
 

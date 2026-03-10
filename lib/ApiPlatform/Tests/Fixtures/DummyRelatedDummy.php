@@ -11,22 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Component\Search\Tests\Fixtures;
+namespace Rollerworks\Component\Search\ApiPlatform\Tests\Fixtures;
 
-/**
- * @internal
- */
-final class CustomerId
+final class DummyRelatedDummy
 {
-    private $id;
 
-    public function __construct($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getCustomerId()
-    {
-        return $this->id;
-    }
 }
