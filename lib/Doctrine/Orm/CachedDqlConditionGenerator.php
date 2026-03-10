@@ -48,10 +48,7 @@ class CachedDqlConditionGenerator extends AbstractCachedConditionGenerator imple
      */
     private $qb;
 
-    /**
-     * @param mixed|null $ttl
-     */
-    public function __construct(QueryBuilder $query, SearchCondition $searchCondition, Cache $cacheDriver, $ttl = null)
+    public function __construct(QueryBuilder $query, SearchCondition $searchCondition, Cache $cacheDriver, \DateInterval|int|null $ttl = null)
     {
         parent::__construct($cacheDriver, $searchCondition, $ttl);
 

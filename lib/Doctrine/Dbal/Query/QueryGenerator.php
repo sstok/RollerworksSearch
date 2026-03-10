@@ -39,9 +39,9 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
 final class QueryGenerator
 {
     /**
-     * @var array [field-name][mapping-index] => {QueryField}
+     * @var array<string, array<string|null, QueryField>> [field-name][mapping-index] => {QueryField}
      */
-    private $fields = [];
+    private array $fields;
 
     /**
      * @var Connection
@@ -61,7 +61,7 @@ final class QueryGenerator
     }
 
     /**
-     * @param array<string, array<string|null, QueryField>> $fields
+     * @param array<string, array<string, QueryField>> $fields
      */
     public static function applySortingTo(?SearchOrder $order, QueryBuilder $qb, array $fields): void
     {
@@ -78,15 +78,16 @@ final class QueryGenerator
                 throw new BadMethodCallException(\sprintf('Field "%s" is registered as multiple mapping and cannot be used for sorting.', $fieldName));
             }
 
-            $qb->addOrderBy($fields[$fieldName][null]->column, mb_strtoupper($direction));
+            $qb->addOrderBy($fields[$fieldName]['']->column, mb_strtoupper($direction));
         }
     }
 
     public function getWhereClause(SearchCondition $searchCondition): string
     {
+        $primaryCondition = $searchCondition->getPrimaryCondition();
         $conditions = [];
 
-        if (null !== $primaryCondition = $searchCondition->getPrimaryCondition()) {
+        if ($primaryCondition !== null) {
             $conditions[] = $this->getGroupQuery($primaryCondition->getValuesGroup());
         }
 
@@ -133,10 +134,12 @@ final class QueryGenerator
 
     /**
      * @param ValuesGroup[] $groups
-     * @param string[]      $query
+     *
+     * @param-out string[]  $query
      */
     private function processGroups(array $groups, array &$query): void
     {
+        /** @var string[] $groupSql */
         $groupSql = [];
 
         foreach ($groups as $group) {
@@ -146,6 +149,11 @@ final class QueryGenerator
         $query[] = self::wrapIfNotEmpty(self::implodeWithValue(' OR ', $groupSql), '(', ')');
     }
 
+    /**
+     * @param mixed[] $values
+     *
+     * @param-out string[] $query
+     */
     private function processSingleValues(array $values, QueryField $mappingConfig, array &$query, bool $exclude, ConversionHints $hints): void
     {
         // NOTE. Using OR/AND seems to be less-performant on some vendors (*namely MySQL*) but this heavily depends
@@ -169,6 +177,8 @@ final class QueryGenerator
 
     /**
      * @param Range[] $ranges
+     *
+     * @param-out string[] $query
      */
     private function processRanges(array $ranges, QueryField $mappingConfig, array &$query, bool $exclude, ConversionHints $hints): void
     {
@@ -218,6 +228,8 @@ final class QueryGenerator
 
     /**
      * @param Compare[] $compares
+     *
+     * @param-out string[] $query
      */
     private function processCompares(array $compares, QueryField $mappingConfig, array &$query, bool $exclude, ConversionHints $hints): void
     {
@@ -253,7 +265,8 @@ final class QueryGenerator
 
     /**
      * @param PatternMatch[] $patternMatchers
-     * @param string[]       $query
+     *
+     * @param-out string[] $query
      */
     private function processPatternMatchers(array $patternMatchers, QueryField $mappingConfig, array &$query, bool $exclude, ConversionHints $hints): void
     {
@@ -286,6 +299,9 @@ final class QueryGenerator
         return implode($glue, $values);
     }
 
+    /**
+     * @param string[] $values
+     */
     private static function implodeValuesWithWrapping(string $glue, array $values, string $prefix, string $suffix): string
     {
         // Remove the empty values
@@ -304,7 +320,7 @@ final class QueryGenerator
         return $value;
     }
 
-    private static function wrapIfNotEmpty(string $value, string $prefix, string $suffix)
+    private static function wrapIfNotEmpty(string $value, string $prefix, string $suffix): string
     {
         if ($value === '') {
             return '';
@@ -313,6 +329,10 @@ final class QueryGenerator
         return $prefix . $value . $suffix;
     }
 
+    /**
+     * @param-out string[] $inclusiveSqlGroup
+     * @param-out string[] $exclusiveSqlGroup
+     */
     private function processFieldValues(ValuesBag $values, QueryField $mappingConfig, array &$inclusiveSqlGroup, array &$exclusiveSqlGroup): void
     {
         $hints = new ConversionHints($this->queryPlatform);

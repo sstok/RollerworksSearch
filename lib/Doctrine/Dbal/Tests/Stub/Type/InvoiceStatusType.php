@@ -26,7 +26,7 @@ final class InvoiceStatusType extends AbstractFieldType
         );
     }
 
-    public function getParent(): ?string
+    public function getParent(): string
     {
         return ChoiceType::class;
     }

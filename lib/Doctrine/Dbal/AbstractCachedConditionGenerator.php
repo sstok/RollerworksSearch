@@ -32,7 +32,7 @@ abstract class AbstractCachedConditionGenerator
      *                                            the driver supports TTL then the library may set a default
      *                                            value for it or let the driver take care of that.
      */
-    protected function __construct(Cache $cacheDriver, SearchCondition $searchCondition, $ttl = null)
+    protected function __construct(Cache $cacheDriver, SearchCondition $searchCondition, \DateInterval|int|null $ttl = null)
     {
         $this->cacheDriver = $cacheDriver;
         $this->cacheLifeTime = $ttl;

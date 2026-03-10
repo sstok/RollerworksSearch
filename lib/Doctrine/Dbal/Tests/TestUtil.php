@@ -15,10 +15,8 @@ namespace Rollerworks\Component\Search\Doctrine\Dbal\Tests;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\AbstractSQLiteDriver\Middleware\EnableForeignKeys;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\ORM\Configuration;
 
@@ -61,10 +59,6 @@ class TestUtil
         $connectionParameters = self::getTestConnectionParameters();
         $configuration = new Configuration();
 
-        if (\in_array($connectionParameters['driver'], ['pdo_sqlite', 'sqlite3'], true) && class_exists(EnableForeignKeys::class)) {
-            $configuration->setMiddlewares([new EnableForeignKeys()]);
-        }
-
         $connection = DriverManager::getConnection($connectionParameters, $configuration);
         \assert($connection instanceof DbalExtensions\Connection);
 
@@ -95,34 +89,20 @@ class TestUtil
         // Connect as a privileged user to create and drop the test database.
         $privConn = DriverManager::getConnection($privConnParams);
 
-        $platform = $privConn->getDatabasePlatform();
+        $dbname = $testConnParams['dbname'] ?? $testConn->getDatabase();
+        $testConn->close();
 
-        if ($platform instanceof SqlitePlatform) {
-            $method = method_exists(AbstractSchemaManager::class, 'introspectSchema') ?
-                'introspectSchema' :
-                'createSchema';
-            $schema = self::createSchemaManager($testConn)->{$method}();
-            $stmts = $schema->toDropSql($testConn->getDatabasePlatform());
+        if ($dbname !== null) {
+            $schemaManager = self::createSchemaManager($privConn);
 
-            foreach ($stmts as $stmt) {
-                $testConn->executeStatement($stmt);
+            try {
+                $schemaManager->dropDatabase($dbname);
+            } catch (DriverException $e) {
             }
-        } else {
-            $dbname = $testConnParams['dbname'] ?? $testConn->getDatabase();
-            $testConn->close();
 
-            if ($dbname !== null) {
-                $schemaManager = self::createSchemaManager($privConn);
+            $schemaManager->createDatabase($dbname);
 
-                try {
-                    $schemaManager->dropDatabase($dbname);
-                } catch (DriverException $e) {
-                }
-
-                $schemaManager->createDatabase($dbname);
-
-                $privConn->close();
-            }
+            $privConn->close();
         }
     }
 
