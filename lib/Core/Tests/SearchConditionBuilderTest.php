@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Rollerworks\Bundle\SearchBundle\Tests;
+namespace Rollerworks\Component\Search\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Rollerworks\Component\Search\Extension\Core\Type\IntegerType;
@@ -32,7 +32,9 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
  */
 final class SearchConditionBuilderTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     */
     public function it_produces_an_empty_condition(): void
     {
         $fieldSet = new FieldSetStub();
@@ -44,7 +46,9 @@ final class SearchConditionBuilderTest extends TestCase
         self::assertEquals(new SearchCondition($fieldSet, new ValuesGroup(ValuesGroup::GROUP_LOGICAL_OR)), $builder->getSearchCondition());
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_disallows_serialization(): void
     {
         $fieldSet = new FieldSetStub();
@@ -56,7 +60,9 @@ final class SearchConditionBuilderTest extends TestCase
         serialize($builder);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_sorting_at_nested_levels(): void
     {
         $searchFactory = Searches::createSearchFactory();
