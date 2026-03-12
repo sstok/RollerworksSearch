@@ -97,7 +97,7 @@ class TestUtil
 
             try {
                 $schemaManager->dropDatabase($dbname);
-            } catch (DriverException $e) {
+            } catch (DriverException) {
             }
 
             $schemaManager->createDatabase($dbname);
@@ -122,7 +122,7 @@ class TestUtil
         $evm = $conn->getEventManager();
 
         /** @var class-string<EventSubscriber> $subscriberClass */
-        foreach (explode(',', $GLOBALS['db_event_subscribers']) as $subscriberClass) {
+        foreach (explode(',', (string) $GLOBALS['db_event_subscribers']) as $subscriberClass) {
             $subscriberInstance = new $subscriberClass();
             $evm->addEventSubscriber($subscriberInstance);
         }

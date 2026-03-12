@@ -818,7 +818,7 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         $fieldSetBuilder = $this->getFieldSet(false);
         $fieldSetBuilder->add('customer', IntegerType::class, [
             'grouping' => true,
-            'doctrine_dbal_conversion' => static fn () => $converter,
+            'doctrine_dbal_conversion' => static fn (): ColumnConversion => $converter,
         ]);
 
         $condition = SearchConditionBuilder::create($fieldSetBuilder->getFieldSet())

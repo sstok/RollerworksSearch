@@ -23,10 +23,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
  */
-class BirthdayTypeExtension extends AbstractFieldTypeExtension
+final class BirthdayTypeExtension extends AbstractFieldTypeExtension
 {
     public function __construct(
-        private readonly AgeDateConversion $conversion,
+        private readonly AgeDateConversion $conversion = new AgeDateConversion(),
     ) {
     }
 

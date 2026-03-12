@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rollerworks\Component\Search\Tests\Doctrine\Orm;
 
+use Doctrine\DBAL\Connection as DoctrineConnection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -43,8 +44,6 @@ use Rollerworks\Component\Search\Tests\Doctrine\Dbal\SchemaRecord;
 
 abstract class OrmTestCase extends DbalTestCase
 {
-    protected const CUSTOMER_CLASS = Fixtures\Entity\ECommerceCustomer::class;
-    protected const INVOICE_CLASS = Fixtures\Entity\ECommerceInvoice::class;
     protected ?EntityManager $em;
     protected Connection $conn;
     private static ?Connection $sharedConn;

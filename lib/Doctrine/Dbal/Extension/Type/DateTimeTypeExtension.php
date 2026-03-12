@@ -19,7 +19,7 @@ use Rollerworks\Component\Search\Field\AbstractFieldTypeExtension;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DateTimeTypeExtension extends AbstractFieldTypeExtension
+final class DateTimeTypeExtension extends AbstractFieldTypeExtension
 {
     private DateIntervalConversion $conversion;
 
@@ -30,15 +30,9 @@ class DateTimeTypeExtension extends AbstractFieldTypeExtension
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(
-            ['doctrine_dbal_conversion' => function (Options $options) {
-                if ($options['allow_relative']) {
-                    return $this->conversion;
-                }
-
-                return null;
-            }]
-        );
+        $resolver->setDefaults([
+            'doctrine_dbal_conversion' => fn (Options $options): ?DateIntervalConversion => $options['allow_relative'] ? $this->conversion : null,
+        ]);
     }
 
     public function getExtendedType(): string

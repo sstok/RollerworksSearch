@@ -28,8 +28,6 @@ final class DoctrineDbalFactoryTest extends DbalTestCase
 {
     protected DoctrineDbalFactory $factory;
 
-    /**
-     */
     /** @test */
     public function create_condition_generator(): void
     {

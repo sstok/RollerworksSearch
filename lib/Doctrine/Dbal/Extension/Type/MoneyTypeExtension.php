@@ -27,10 +27,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
  */
-class MoneyTypeExtension extends AbstractFieldTypeExtension
+final class MoneyTypeExtension extends AbstractFieldTypeExtension
 {
     public function __construct(
-        private readonly MoneyValueConversion $conversion,
+        private readonly MoneyValueConversion $conversion = new MoneyValueConversion(),
     ) {
     }
 

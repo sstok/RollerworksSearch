@@ -21,7 +21,7 @@ final class SchemaRecord
     private array $records = [];
 
     /**
-     * @param array<string, string> $columns   ['column1' => 'type']
+     * @param array<string, string> $columns ['column1' => 'type']
      */
     public function __construct(
         private readonly string $table,

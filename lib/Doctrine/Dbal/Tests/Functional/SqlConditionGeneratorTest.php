@@ -340,7 +340,7 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $converter
             ->expects(self::atLeastOnce())
             ->method('convertColumn')
-            ->willReturnCallback(static fn ($column) => "CAST({$column} AS {$type})")
+            ->willReturnCallback(static fn ($column): string => "CAST({$column} AS {$type})")
         ;
 
         $fieldSetBuilder = $this->getFieldSet(false);
@@ -365,7 +365,7 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $converter
             ->expects(self::atLeastOnce())
             ->method('convertValue')
-            ->willReturnCallback(static fn ($input) => "CAST({$input} AS {$type})")
+            ->willReturnCallback(static fn ($input): string => "CAST({$input} AS {$type})")
         ;
 
         $fieldSetBuilder = $this->getFieldSet(false);
