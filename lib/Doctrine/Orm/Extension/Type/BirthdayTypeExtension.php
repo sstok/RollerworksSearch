@@ -20,8 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class BirthdayTypeExtension extends AbstractFieldTypeExtension
 {
-    /** @var AgeDateConversion */
-    private $conversion;
+    private AgeDateConversion $conversion;
 
     public function __construct()
     {

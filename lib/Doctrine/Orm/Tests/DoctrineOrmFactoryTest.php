@@ -30,11 +30,10 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
  */
 final class DoctrineOrmFactoryTest extends OrmTestCase
 {
-    /**
-     * @var DoctrineOrmFactory
-     */
-    protected $factory;
+    protected DoctrineOrmFactory $factory;
 
+    /**
+     */
     /** @test */
     public function create_condition_generator(): void
     {

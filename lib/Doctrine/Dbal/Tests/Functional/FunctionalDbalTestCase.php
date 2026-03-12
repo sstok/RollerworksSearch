@@ -22,7 +22,6 @@ use Doctrine\DBAL\SQL\Builder\DropSchemaObjectsSQLBuilder;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\Warning;
 use Rollerworks\Component\Search\Doctrine\Dbal\ConditionGenerator;
 use Rollerworks\Component\Search\Doctrine\Dbal\Test\QueryBuilderAssertion;
 use Rollerworks\Component\Search\Doctrine\Dbal\Tests\TestUtil;
@@ -33,21 +32,12 @@ use Rollerworks\Component\Search\Tests\Doctrine\Dbal\SchemaRecord;
 abstract class FunctionalDbalTestCase extends DbalTestCase
 {
     /**
-     * Shared connection when a TestCase is run alone (outside of it's functional suite).
-     *
-     * @var Connection|null
+     * Shared connection for setting up the database in a single place
+     * during class setup and tear down.
      */
-    private static $sharedConn;
+    private static ?Connection $sharedConn;
 
-    /**
-     * @var Connection|null
-     */
-    protected $conn;
-
-    /**
-     * @var string|null
-     */
-    protected $query;
+    protected Connection $conn;
 
     protected static function resetSharedConn(): void
     {
@@ -82,6 +72,7 @@ abstract class FunctionalDbalTestCase extends DbalTestCase
                 try {
                     $this->conn->executeStatement($s);
                 } catch (\Throwable) {
+                    // Noop - tables might not exist yet
                 }
             }
 
@@ -133,7 +124,7 @@ abstract class FunctionalDbalTestCase extends DbalTestCase
 
     public static function tearDownAfterClass(): void
     {
-        // There are errors recorded so don't reset the connection.
+        // There were errors recorded so don't reset the connection.
         if (\count(self::$sharedConn->queryLog->queries ?? []) > 0) {
             return;
         }
@@ -163,13 +154,13 @@ abstract class FunctionalDbalTestCase extends DbalTestCase
     /**
      * @return SchemaRecord[]
      */
-    protected function getDbRecords()
+    protected function getDbRecords(): array
     {
         return [];
     }
 
     /**
-     * Returns the string for the ConditionGenerator.
+     * Returns the QueryBuilder for the ConditionGenerator.
      */
     abstract protected function getQuery(): QueryBuilder;
 
@@ -181,6 +172,8 @@ abstract class FunctionalDbalTestCase extends DbalTestCase
     }
 
     /**
+     * @param (int|string)[] $ids
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     protected function assertRecordsAreFound(SearchCondition $condition, array $ids): void
@@ -263,9 +256,11 @@ abstract class FunctionalDbalTestCase extends DbalTestCase
     }
 
     /**
-     * @param SearchCondition|ConditionGenerator $conditionOrWhere
+     * @param ConditionGenerator|SearchCondition $conditionOrWhere Either a ConditionGenerator or a SearchCondition
+     * @param string                             $expectedSql      Expected generated SQL for the query
+     * @param array<string, mixed>|null          $parameters       Expected parameters for the query
      */
-    protected function assertQueryIsExecutable($conditionOrWhere, string $expectedSql = '', ?array $parameters = null): void
+    protected function assertQueryIsExecutable(ConditionGenerator | SearchCondition $conditionOrWhere, string $expectedSql = '', ?array $parameters = null): void
     {
         if ($conditionOrWhere instanceof SearchCondition) {
             $conditionGenerator = $this->getDbalFactory()->createConditionGenerator($this->getQuery(), $conditionOrWhere);

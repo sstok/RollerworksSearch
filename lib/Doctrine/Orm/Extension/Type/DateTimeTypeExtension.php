@@ -20,8 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class DateTimeTypeExtension extends AbstractFieldTypeExtension
 {
-    /** @var DateIntervalConversion */
-    private $conversion;
+    private DateIntervalConversion $conversion;
 
     public function __construct()
     {

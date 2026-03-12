@@ -29,10 +29,8 @@ final class CachedConditionGeneratorTest extends DbalTestCase
     private QueryBuilder $query;
     private CachedConditionGenerator $conditionGenerator;
 
-    /**
-     * @var Cache&MockObject
-     */
-    protected $cacheDriver;
+    /** @var Cache&MockObject */
+    protected MockObject $cacheDriver;
 
     public const CACHE_KEY = 'da80730b87c4750f8c619ac64b679586ac2f9d86c53508d1a53a7c0341b4e363';
 

@@ -30,20 +30,11 @@ use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInv
  */
 final class CachedDqlConditionGeneratorTest extends OrmTestCase
 {
-    /**
-     * @var QueryBuilder
-     */
-    private $query;
+    private QueryBuilder $query;
+    protected CachedDqlConditionGenerator $conditionGenerator;
 
-    /**
-     * @var CachedDqlConditionGenerator
-     */
-    protected $conditionGenerator;
-
-    /**
-     * @var CacheInterface|MockObject
-     */
-    protected $cacheDriver;
+    /** @var CacheInterface|MockObject */
+    protected MockObject $cacheDriver;
 
     public const CACHE_KEY = 'df58623bc959d1cf34d360c31f4d57b21ee51ffb5179059507b90c47035075dd';
 

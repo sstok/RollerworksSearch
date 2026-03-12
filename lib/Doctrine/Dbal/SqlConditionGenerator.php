@@ -39,16 +39,14 @@ use Rollerworks\Component\Search\SearchCondition;
  */
 final class SqlConditionGenerator implements ConditionGenerator
 {
-    private QueryBuilder $qb;
-    private SearchCondition $searchCondition;
-    private FieldConfigurationSet $fieldsConfig;
+    private readonly FieldConfigurationSet $fieldsConfig;
     private bool $isApplied = false;
 
-    public function __construct(QueryBuilder $queryBuilder, SearchCondition $searchCondition)
-    {
-        $this->qb = $queryBuilder;
-        $this->searchCondition = $searchCondition;
-        $this->fieldsConfig = new FieldConfigurationSet($searchCondition->getFieldSet());
+    public function __construct(
+        private readonly QueryBuilder $qb,
+        private readonly SearchCondition $searchCondition,
+    ) {
+        $this->fieldsConfig = new FieldConfigurationSet($this->searchCondition->getFieldSet());
     }
 
     public function setField(string $fieldName, string $column, ?string $alias = null, string $type = 'string'): self

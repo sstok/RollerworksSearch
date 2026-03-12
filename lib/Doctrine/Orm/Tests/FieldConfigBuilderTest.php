@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rollerworks\Component\Search\Tests\Doctrine\Orm;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -33,22 +34,15 @@ final class FieldConfigBuilderTest extends TestCase
     public const CUSTOMER_CLASS = Fixtures\Entity\ECommerceCustomer::class;
     public const INVOICE_CLASS = Fixtures\Entity\ECommerceInvoice::class;
 
-    /**
-     * @var ObjectProphecy
-     */
-    private $em;
-
-    /**
-     * @var SearchFactory
-     */
-    private $searchFactory;
+    private ObjectProphecy $em;
+    private SearchFactory $searchFactory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->searchFactory = Searches::createSearchFactoryBuilder()->getSearchFactory();
-        $this->em = $this->prophesize('Doctrine\ORM\EntityManagerInterface');
+        $this->em = $this->prophesize(EntityManagerInterface::class);
     }
 
     private function getFieldSet($build = true)

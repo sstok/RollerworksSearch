@@ -21,13 +21,12 @@ use Rollerworks\Component\Search\FieldSet;
  */
 final class FieldConfigurationSet
 {
-    private FieldSet $fieldSet;
     /** @var array<string, array<string|null, QueryField>> */
-    public $fields = [];
+    public array $fields = [];
 
-    public function __construct(FieldSet $fieldSet)
-    {
-        $this->fieldSet = $fieldSet;
+    public function __construct(
+        private readonly FieldSet $fieldSet,
+    ) {
     }
 
     public function setField(string $fieldName, string $column, ?string $alias = null, string $type = 'string'): void

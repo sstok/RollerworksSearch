@@ -41,10 +41,7 @@ final class ChildCountTypeTest extends FunctionalDbalTestCase
         $userTable->addColumn('name', 'string', ['length' => 255]);
     }
 
-    /**
-     * @return SchemaRecord[]
-     */
-    protected function getDbRecords()
+    protected function getDbRecords(): array
     {
         return [
             SchemaRecord::create('site_user', ['id' => 'integer', 'birthday' => 'date_immutable'])

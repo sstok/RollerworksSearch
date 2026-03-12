@@ -23,11 +23,8 @@ use Rollerworks\Component\Search\Extension\Core\Model\MoneyValue;
 
 final class MoneyValueConversion implements ValueConversion, ColumnConversion
 {
-    /** @var DecimalMoneyFormatter */
-    private $formatter;
-
-    /** @var ISOCurrencies */
-    private $currencies;
+    private DecimalMoneyFormatter $formatter;
+    private ISOCurrencies $currencies;
 
     public function __construct()
     {

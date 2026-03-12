@@ -36,22 +36,10 @@ use Rollerworks\Component\Search\SearchCondition;
  */
 final class QueryBuilderConditionGenerator implements ConditionGenerator
 {
-    /**
-     * @var FieldConfigBuilder
-     */
-    private $fieldsConfig;
-
-    /**
-     * @var SearchCondition
-     */
-    private $searchCondition;
-
-    /**
-     * @var QueryBuilder
-     */
-    private $qb;
-
-    private $isApplied = false;
+    private FieldConfigBuilder $fieldsConfig;
+    private SearchCondition $searchCondition;
+    private QueryBuilder $qb;
+    private bool $isApplied = false;
 
     public function __construct(QueryBuilder $query, SearchCondition $searchCondition)
     {

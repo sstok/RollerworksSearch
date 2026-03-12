@@ -29,14 +29,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MoneyTypeExtension extends AbstractFieldTypeExtension
 {
-    /**
-     * @var MoneyValueConversion
-     */
-    private $conversion;
-
-    public function __construct(MoneyValueConversion $conversion)
-    {
-        $this->conversion = $conversion;
+    public function __construct(
+        private readonly MoneyValueConversion $conversion,
+    ) {
     }
 
     public function configureOptions(OptionsResolver $resolver): void

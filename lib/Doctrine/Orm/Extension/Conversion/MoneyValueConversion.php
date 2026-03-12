@@ -23,11 +23,8 @@ use Rollerworks\Component\Search\Extension\Core\Model\MoneyValue;
 
 final class MoneyValueConversion implements ValueConversion, ColumnConversion
 {
-    /** @var DecimalMoneyFormatter */
-    private $formatter;
-
-    /** @var ISOCurrencies */
-    private $currencies;
+    private DecimalMoneyFormatter $formatter;
+    private ISOCurrencies $currencies;
 
     public function __construct()
     {
@@ -38,7 +35,7 @@ final class MoneyValueConversion implements ValueConversion, ColumnConversion
     /**
      * @param MoneyValue $value
      */
-    public function convertValue($value, array $options, ConversionHints $hints): string
+    public function convertValue(mixed $value, array $options, ConversionHints $hints): string
     {
         $sqlValue = $hints->createParamReferenceFor($this->formatter->format($value->value));
         $scale = $this->currencies->subunitFor($value->value->getCurrency());

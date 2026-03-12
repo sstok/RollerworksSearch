@@ -1,5 +1,17 @@
+UPGRADE FROM 2.0-BETA10 to 2.0-BETA13
+=====================================
+
+### Core
+
+  * The `Rollerworks\Component\Search\Extension\Core\DataTransformer\IntegerToStringTransformer`
+    deprecated usage of accepting a `null` value for `$roundingMode`, use `IntegerToStringTransformer::ROUND_DOWN` instead.
+
+  * The `Rollerworks\Component\Search\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer`
+    deprecated usage of accepting a `null` value for `$grouping` and `$roundingMode`
+    use `NumberToLocalizedStringTransformer::ROUND_DOWN` for `$roundingMode` and `false` for `$grouping` instead.
+
 UPGRADE FROM 2.0-BETA9 to 2.0-BETA10
-===================================
+====================================
 
 ### Api-Platform
 

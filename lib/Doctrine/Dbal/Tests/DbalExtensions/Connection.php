@@ -26,8 +26,7 @@ use Doctrine\DBAL\Logging\Middleware as LoggingMiddleware;
  */
 final class Connection extends BaseConnection
 {
-    /** @var QueryLog */
-    public $queryLog;
+    public QueryLog $queryLog;
 
     public function __construct(array $params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null)
     {

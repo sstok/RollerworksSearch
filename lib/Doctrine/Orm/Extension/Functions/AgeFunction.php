@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rollerworks\Component\Search\Doctrine\Orm\Extension\Functions;
 
+use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
@@ -22,7 +23,7 @@ use Doctrine\ORM\Query\TokenType;
  */
 final class AgeFunction extends PlatformSpecificFunction
 {
-    public $stringPrimary;
+    public Node $stringPrimary;
 
     public function getSql(SqlWalker $sqlWalker): string
     {

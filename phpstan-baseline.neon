@@ -217,12 +217,6 @@ parameters:
 			path: lib/Doctrine/Orm/Tests/OrmTestCase.php
 
 		-
-			message: '#^Method Rollerworks\\Component\\Search\\Elasticsearch\\FieldMapping\:\:parseProperty\(\) should return array\<string\> but returns array\<string, array\<string, array\<string, array\<string, array\<string, bool\|string\>\|bool\|string\>\|bool\|string\>\|bool\|string\>\|string\|false\|null\>\.$#'
-			identifier: return.type
-			count: 1
-			path: lib/Elasticsearch/FieldMapping.php
-
-		-
 			message: '#^Variable \$nestedBool might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2

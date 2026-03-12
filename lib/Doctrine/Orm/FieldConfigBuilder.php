@@ -21,25 +21,16 @@ use Rollerworks\Component\Search\FieldSet;
  */
 final class FieldConfigBuilder
 {
-    /** @var FieldSet */
-    private $fieldSet;
-
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
     /** @var array<string, array<string, OrmQueryField>> ['fieldName'][mappingIndex] => {OrmQueryField} */
     private array $fields = [];
 
-    /** @var string */
-    private $defaultEntity;
+    private ?string $defaultEntity = null;
+    private ?string $defaultAlias = null;
 
-    /** @var string */
-    private $defaultAlias;
-
-    public function __construct(EntityManagerInterface $entityManager, FieldSet $fieldSet)
-    {
-        $this->entityManager = $entityManager;
-        $this->fieldSet = $fieldSet;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FieldSet $fieldSet,
+    ) {
     }
 
     public function setDefaultEntity(string $entity, string $alias): void

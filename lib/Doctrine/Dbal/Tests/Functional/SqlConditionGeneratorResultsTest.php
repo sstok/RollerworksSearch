@@ -49,10 +49,7 @@ use Rollerworks\Component\Search\Tests\Doctrine\Dbal\SchemaRecord;
  */
 final class SqlConditionGeneratorResultsTest extends FunctionalDbalTestCase
 {
-    /**
-     * @var StringQueryInput
-     */
-    private $inputProcessor;
+    private StringQueryInput $inputProcessor;
 
     protected function setUp(): void
     {
@@ -94,12 +91,9 @@ final class SqlConditionGeneratorResultsTest extends FunctionalDbalTestCase
         $invoiceDetailsTable->setPrimaryKey(['id']);
     }
 
-    /**
-     * @return SchemaRecord[]
-     */
-    protected function getDbRecords()
+    protected function getDbRecords(): array
     {
-        $date = static fn (string $input) => new \DateTimeImmutable($input, new \DateTimeZone('UTC'));
+        $date = static fn (string $input): \DateTimeImmutable => new \DateTimeImmutable($input, new \DateTimeZone('UTC'));
 
         return [
             SchemaRecord::create(

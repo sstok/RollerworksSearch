@@ -26,11 +26,10 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
  */
 final class DoctrineDbalFactoryTest extends DbalTestCase
 {
-    /**
-     * @var DoctrineDbalFactory
-     */
-    protected $factory;
+    protected DoctrineDbalFactory $factory;
 
+    /**
+     */
     /** @test */
     public function create_condition_generator(): void
     {

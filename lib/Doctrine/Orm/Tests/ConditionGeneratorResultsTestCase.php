@@ -47,10 +47,7 @@ use Rollerworks\Component\Search\Tests\Doctrine\Dbal\SchemaRecord;
  */
 abstract class ConditionGeneratorResultsTestCase extends OrmTestCase
 {
-    /**
-     * @var StringQueryInput
-     */
-    private $inputProcessor;
+    private StringQueryInput $inputProcessor;
 
     protected function setUp(): void
     {
@@ -64,7 +61,7 @@ abstract class ConditionGeneratorResultsTestCase extends OrmTestCase
      */
     protected function getDbRecords()
     {
-        $date = static fn (string $input) => new \DateTimeImmutable($input, new \DateTimeZone('UTC'));
+        $date = static fn (string $input): \DateTimeImmutable => new \DateTimeImmutable($input, new \DateTimeZone('UTC'));
 
         return [
             SchemaRecord::create(

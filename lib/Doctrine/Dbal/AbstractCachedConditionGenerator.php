@@ -19,24 +19,21 @@ use Rollerworks\Component\Search\SearchCondition;
 
 abstract class AbstractCachedConditionGenerator
 {
-    protected Cache $cacheDriver;
-    protected \DateInterval|int|null $cacheLifeTime;
-    protected SearchCondition $searchCondition;
     protected ?string $cacheKey = null;
     protected bool $isApplied = false;
 
     /**
-     * @param Cache                  $cacheDriver PSR-16 SimpleCache instance. Use a custom pool to ease
-     *                                            purging invalidated items
-     * @param \DateInterval|int|null $ttl         Optional. The TTL value of this item. If no value is sent and
-     *                                            the driver supports TTL then the library may set a default
-     *                                            value for it or let the driver take care of that.
+     * @param Cache                  $cacheDriver   PSR-16 SimpleCache instance. Use a custom pool to ease
+     *                                              purging invalidated items
+     * @param \DateInterval|int|null $cacheLifeTime Optional. The TTL value of this item. If no value is sent and
+     *                                              the driver supports TTL then the library may set a default
+     *                                              value for it or let the driver take care of that.
      */
-    protected function __construct(Cache $cacheDriver, SearchCondition $searchCondition, \DateInterval|int|null $ttl = null)
-    {
-        $this->cacheDriver = $cacheDriver;
-        $this->cacheLifeTime = $ttl;
-        $this->searchCondition = $searchCondition;
+    protected function __construct(
+        protected Cache $cacheDriver,
+        protected SearchCondition $searchCondition,
+        protected \DateInterval | int | null $cacheLifeTime = null,
+    ) {
     }
 
     public function getSearchCondition(): SearchCondition

@@ -39,25 +39,13 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
 final class QueryGenerator
 {
     /**
-     * @var array<string, array<string|null, QueryField>> [field-name][mapping-index] => {QueryField}
+     * @param array<string, array<string|null, QueryField>> $fields [field-name][mapping-index] => {QueryField}
      */
-    private array $fields;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var AbstractQueryPlatform
-     */
-    private $queryPlatform;
-
-    public function __construct(Connection $connection, AbstractQueryPlatform $queryPlatform, array $fields)
-    {
-        $this->connection = $connection;
-        $this->queryPlatform = $queryPlatform;
-        $this->fields = $fields;
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly AbstractQueryPlatform $queryPlatform,
+        private readonly array $fields,
+    ) {
     }
 
     /**

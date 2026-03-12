@@ -26,45 +26,25 @@ class ConversionHints
     public const CONTEXT_SIMPLE_VALUE = 'simple_value';
     public const CONTEXT_COMPARISON = 'comparison';
 
-    /**
-     * @var QueryField
-     */
-    public $field;
+    public QueryField $field;
+    public Connection $connection;
+    public string $column;
 
-    /**
-     * @var Connection
-     */
-    public $connection;
+    /** @var self::CONTEXT_* */
+    public string $context;
 
-    /**
-     * @var string
-     */
-    public $column;
+    /** @var mixed|ValueHolder */
+    public mixed $originalValue;
 
-    /**
-     * @var string
-     */
-    public $context;
-
-    /**
-     * @var mixed|ValueHolder
-     */
-    public $originalValue;
-
-    /**
-     * @var AbstractQueryPlatform
-     */
-    private $queryPlatform;
-
-    public function __construct(AbstractQueryPlatform $queryPlatform)
-    {
-        $this->queryPlatform = $queryPlatform;
+    public function __construct(
+        private readonly AbstractQueryPlatform $queryPlatform,
+    ) {
     }
 
     /**
      * Returns a parameter-name to reference a value.
      */
-    public function createParamReferenceFor($value, string|Type|null $type = 'string'): string
+    public function createParamReferenceFor($value, string | Type | null $type = 'string'): string
     {
         if (\is_object($type)) {
             $type = Type::lookupName($type);
@@ -97,7 +77,7 @@ class ConversionHints
      * The $this->originalValue might return a value-holder or actual
      * processing value depending on the context.
      */
-    public function getProcessingValue()
+    public function getProcessingValue(): mixed
     {
         switch ($this->context) {
             case self::CONTEXT_SIMPLE_VALUE:
@@ -111,6 +91,9 @@ class ConversionHints
 
             case self::CONTEXT_RANGE_UPPER_BOUND:
                 return $this->originalValue->getUpper();
+
+            default:
+                throw new \LogicException(\sprintf('Unknown context "%s".', $this->context));
         }
     }
 

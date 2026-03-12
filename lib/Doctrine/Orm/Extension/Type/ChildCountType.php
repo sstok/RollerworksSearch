@@ -18,9 +18,9 @@ use Rollerworks\Component\Search\Extension\Doctrine\Orm\Conversion\ChildCountCon
 use Rollerworks\Component\Search\Field\AbstractFieldTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ChildCountType extends AbstractFieldTypeExtension
+final class ChildCountType extends AbstractFieldTypeExtension
 {
-    private $conversion;
+    private ChildCountConversion $conversion;
 
     public function __construct()
     {

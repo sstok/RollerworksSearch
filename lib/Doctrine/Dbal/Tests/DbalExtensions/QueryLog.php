@@ -21,10 +21,9 @@ namespace Rollerworks\Component\Search\Doctrine\Dbal\Tests\DbalExtensions;
 final class QueryLog
 {
     /** @var list<array{sql: string, params: array|null, types: array|null}> */
-    public $queries = [];
+    public array $queries = [];
 
-    /** @var bool */
-    private $enabled = false;
+    private bool $enabled = false;
 
     public function logQuery(string $sql, ?array $params = null, ?array $types = null): void
     {
@@ -39,7 +38,9 @@ final class QueryLog
         ];
     }
 
-    /** @return $this */
+    /**
+     * @return $this
+     */
     public function reset(): self
     {
         $this->enabled = false;
@@ -48,7 +49,9 @@ final class QueryLog
         return $this;
     }
 
-    /** @return $this */
+    /**
+     * @return $this
+     */
     public function enable(): self
     {
         $this->enabled = true;
@@ -56,7 +59,9 @@ final class QueryLog
         return $this;
     }
 
-    /** @return $this */
+    /**
+     * @return $this
+     */
     public function disable(): self
     {
         $this->enabled = false;
