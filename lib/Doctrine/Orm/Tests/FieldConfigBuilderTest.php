@@ -58,7 +58,10 @@ final class FieldConfigBuilderTest extends TestCase
         return $build ? $fieldSet->getFieldSet('invoice') : $fieldSet;
     }
 
-    private function getClassMetadata(string $entityClass, array $fields): void
+    /**
+     * @param array<string, array{type: string}|array{join: array{class: string, column: string, property: string, type: string}}|array{join_multi: true}> $fields
+     */
+    private function expectClassMetadata(string $entityClass, array $fields): void
     {
         $classMetadata = $this->prophesize(ClassMetadata::class);
         $classMetadata->getName()->willReturn($entityClass);
@@ -69,9 +72,7 @@ final class FieldConfigBuilderTest extends TestCase
                 $classMetadata->hasAssociation($property)->willReturn(true);
                 $classMetadata->getTypeOfField($property)->willReturn(null);
                 $classMetadata->getAssociationTargetClass($property)->willReturn($field['join']['class']);
-                $classMetadata->getSingleAssociationReferencedJoinColumnName($property)->willReturn(
-                    $field['join']['column']
-                );
+                $classMetadata->getSingleAssociationReferencedJoinColumnName($property)->willReturn($field['join']['column']);
 
                 $joinClassMetadata = $this->prophesize(ClassMetadata::class);
                 $joinClassMetadata->getName()->willReturn($field['join']['class']);
@@ -96,12 +97,12 @@ final class FieldConfigBuilderTest extends TestCase
     /** @test */
     public function resolve_with_default_entity(): void
     {
-        $this->getClassMetadata(ECommerceInvoice::class, [
+        $this->expectClassMetadata(ECommerceInvoice::class, [
             'id' => ['type' => 'integer'],
             'parent' => ['type' => 'integer'],
         ]);
 
-        $this->getClassMetadata(ECommerceCustomer::class, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'first_name' => ['type' => 'string'],
             'last_name' => ['type' => 'string'],
@@ -133,14 +134,14 @@ final class FieldConfigBuilderTest extends TestCase
     /** @test */
     public function resolve_with_full_field_mapping(): void
     {
-        $this->getClassMetadata(ECommerceInvoice::class, [
+        $this->expectClassMetadata(ECommerceInvoice::class, [
             'id' => ['type' => 'integer'],
             'parent' => ['type' => 'integer'],
             'invoice_id' => ['type' => 'integer'],
             'parent_id' => ['type' => 'integer'],
         ]);
 
-        $this->getClassMetadata(ECommerceCustomer::class, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'first_name' => ['type' => 'string'],
             'last_name' => ['type' => 'string'],
@@ -160,7 +161,7 @@ final class FieldConfigBuilderTest extends TestCase
     /** @test */
     public function fails_to_resolve_with_join_association(): void
     {
-        $this->getClassMetadata(
+        $this->expectClassMetadata(
             ECommerceInvoice::class,
             [
                 'id' => ['type' => 'integer'],
@@ -176,7 +177,7 @@ final class FieldConfigBuilderTest extends TestCase
             ]
         );
 
-        $this->getClassMetadata(ECommerceCustomer::class, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'name' => ['type' => 'string'],
         ]);
@@ -193,9 +194,20 @@ final class FieldConfigBuilderTest extends TestCase
     }
 
     /** @test */
+    public function fails_when_no_entity_is_provided(): void
+    {
+        $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $this->getFieldSet());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No default entity is set, either provide the entity or set a default entity first.');
+
+        $fieldConfigBuilder->setField('id', 'id');
+    }
+
+    /** @test */
     public function fails_to_resolve_with_multi_column_join_association(): void
     {
-        $this->getClassMetadata(
+        $this->expectClassMetadata(
             ECommerceInvoice::class,
             [
                 'id' => ['type' => 'integer'],
@@ -205,7 +217,7 @@ final class FieldConfigBuilderTest extends TestCase
             ]
         );
 
-        $this->getClassMetadata(ECommerceCustomer::class, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'name' => ['type' => 'string'],
         ]);

@@ -44,6 +44,10 @@ final class FieldConfigBuilder
         $mappingIdx = null;
         $fieldName = $mappingName;
 
+        if ($entity === null && $this->defaultEntity === null) {
+            throw new \RuntimeException('No default entity is set, either provide the entity or set a default entity first.');
+        }
+
         if (mb_strpos($mappingName, '#') !== false) {
             [$fieldName, $mappingIdx] = explode('#', $mappingName, 2);
             unset($this->fields[$fieldName]['']);
