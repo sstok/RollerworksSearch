@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rollerworks\Component\Search\Tests\Doctrine\Orm;
 
+use Doctrine\DBAL\Connection as DoctrineConnection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -43,30 +44,10 @@ use Rollerworks\Component\Search\Tests\Doctrine\Dbal\SchemaRecord;
 
 abstract class OrmTestCase extends DbalTestCase
 {
-    protected const CUSTOMER_CLASS = Fixtures\Entity\ECommerceCustomer::class;
-    protected const INVOICE_CLASS = Fixtures\Entity\ECommerceInvoice::class;
-
-    /**
-     * @var EntityManager|null
-     */
-    protected $em;
-
-    /**
-     * @var \Doctrine\DBAL\Connection|null
-     */
-    protected $conn;
-
-    /**
-     * Shared connection when a TestCase is run alone (outside of it's functional suite).
-     *
-     * @var Connection|null
-     */
-    private static $sharedConn;
-
-    /**
-     * @var EntityManager|null
-     */
-    private static $sharedEm;
+    protected ?EntityManager $em;
+    protected Connection $conn;
+    private static ?Connection $sharedConn;
+    private static ?EntityManager $sharedEm;
 
     protected function setUp(): void
     {
@@ -162,6 +143,8 @@ abstract class OrmTestCase extends DbalTestCase
     }
 
     /**
+     * @param (int|string)[] $ids
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     protected function assertRecordsAreFound(SearchCondition $condition, array $ids, string $input): void
@@ -205,7 +188,7 @@ abstract class OrmTestCase extends DbalTestCase
         $query = $qb->getQuery();
         $rows = $query->getArrayResult();
         $idRows = array_map(
-            static fn ($value) => $value['id'],
+            static fn ($value): mixed => $value['id'],
             $rows
         );
 
@@ -223,6 +206,9 @@ abstract class OrmTestCase extends DbalTestCase
         );
     }
 
+    /**
+     * @param array<string, mixed>|null $parameters
+     */
     protected static function assertQueryParametersEquals(?array $parameters, QueryBuilder $qb): void
     {
         if ($parameters === null) {

@@ -17,35 +17,40 @@ use Doctrine\DBAL\Connection;
 
 final class SchemaRecord
 {
-    private $table;
-    private $records = [];
-    private $columns = [];
+    /** @var array<int, mixed[]> */
+    private array $records = [];
 
-    public function __construct($tableName, array $columns)
-    {
-        $this->table = $tableName;
-        $this->columns = $columns;
+    /**
+     * @param array<string, string> $columns ['column1' => 'type']
+     */
+    public function __construct(
+        private readonly string $table,
+        private readonly array $columns,
+    ) {
     }
 
     /**
-     * @param string $tableName Fully qualified table-name
-     * @param array  $columns   [column1, column2] (must contain "id")
+     * @param string                $tableName Fully qualified table-name
+     * @param array<string, string> $columns   ['column1' => 'type']
      *
      * @return SchemaRecord
      */
-    public static function create($tableName, array $columns)
+    public static function create(string $tableName, array $columns)
     {
         return new self($tableName, $columns);
     }
 
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
 
+    /**
+     * @param mixed[] $values Values are expected in the same order as the columns
+     */
     public function add(array $values)
     {
-        if (\count($values) != \count($this->columns)) {
+        if (\count($values) !== \count($this->columns)) {
             throw new \InvalidArgumentException(
                 \sprintf(
                     'Values count mismatch, expected %d got %d on table "%s" with record: %s',
@@ -63,26 +68,25 @@ final class SchemaRecord
     }
 
     /**
-     * Semantic method for chaining.
-     *
-     * @return static
+     * @return $this
      */
-    public function end()
+    public function end(): self
     {
         return $this;
     }
 
     /**
-     * Semantic method for chaining.
-     *
-     * @return static
+     * @return $this
      */
-    public function records()
+    public function records(): self
     {
         return $this;
     }
 
-    public function getColumns()
+    /**
+     * @return array<string, string> ['column1' => 'type']
+     */
+    public function getColumns(): array
     {
         return $this->columns;
     }

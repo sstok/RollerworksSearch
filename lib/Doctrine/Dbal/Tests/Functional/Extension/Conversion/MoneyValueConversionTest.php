@@ -40,10 +40,7 @@ final class MoneyValueConversionTest extends FunctionalDbalTestCase
         $invoiceTable->addColumn('total', 'decimal', ['scale' => 2, 'precision' => 10]);
     }
 
-    /**
-     * @return SchemaRecord[]
-     */
-    protected function getDbRecords()
+    protected function getDbRecords(): array
     {
         return [
             SchemaRecord::create('product', ['id' => 'integer', 'price' => 'string', 'total' => 'decimal'])

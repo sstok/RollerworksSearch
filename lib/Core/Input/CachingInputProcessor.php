@@ -22,7 +22,7 @@ use Rollerworks\Component\Search\SearchConditionSerializer;
 /**
  * Caches the SearchCondition in a PSR-16 (SimpleCache) storage.
  *
- * Caching a processed input provides the most benefit for a really big
+ * Caching a processed input provides the most benefit for a large
  * search condition. Most conditions can be processed with easy, and the
  * overhead of caching is not worth it.
  *
@@ -33,53 +33,54 @@ use Rollerworks\Component\Search\SearchConditionSerializer;
  */
 final class CachingInputProcessor implements InputProcessor
 {
-    private $conditionSerializer;
-    private $inputProcessor;
-    private $cache;
-    private $ttl;
+    private \DateInterval | int | null $ttl;
 
     /**
      * @param \DateInterval|string|int|null $ttl The default Time to life for caches. If no value is sent and
      *                                           the driver supports TTL then the library may set a default value
-     *                                           for it or let the driver take care of that. Null means no expiration
+     *                                           for it or let the driver take care of that. Null means no expiration.
+     *                                           A string is interpreted as a DateInterval.
      */
-    public function __construct(CacheInterface $cache, SearchConditionSerializer $conditionSerializer, InputProcessor $inputProcessor, \DateInterval|string|int|null $ttl = null)
-    {
+    public function __construct(
+        private readonly CacheInterface $cache,
+        private readonly SearchConditionSerializer $conditionSerializer,
+        private readonly InputProcessor $inputProcessor,
+        \DateInterval | string | int | null $ttl = null,
+    ) {
         if (\is_string($ttl)) {
             $ttl = new \DateInterval($ttl);
         }
 
-        $this->conditionSerializer = $conditionSerializer;
-        $this->inputProcessor = $inputProcessor;
-        $this->cache = $cache;
         $this->ttl = $ttl;
     }
 
     public function process(ProcessorConfig $config, $input): SearchCondition
     {
-        if (\is_string($input)) {
-            $cacheKey = $this->getConditionCacheKey($config, $input);
+        $ttl = $config->getCacheTTL() ?? $this->ttl;
 
-            try {
-                return $this->conditionSerializer->unserialize($this->cache->get($cacheKey, []));
-            } catch (InvalidArgumentException $e) {
-                // No-op
-            }
-
-            $result = $this->inputProcessor->process($config, $input);
-
-            if (! $result->isEmpty()) {
-                $this->cache->set($cacheKey, $this->conditionSerializer->serialize($result), $config->getCacheTTL() ?? $this->ttl);
-            }
-
-            return $result;
+        if ($ttl === null || $ttl === 0 || ! \is_string($input)) {
+            return $this->inputProcessor->process($config, $input);
         }
 
-        return $this->inputProcessor->process($config, $input);
+        $cacheKey = $this->getConditionCacheKey($config, $input);
+
+        try {
+            return $this->conditionSerializer->unserialize($this->cache->get($cacheKey, []));
+        } catch (InvalidArgumentException) {
+            // No-op
+        }
+
+        $result = $this->inputProcessor->process($config, $input);
+
+        if (! $result->isEmpty()) {
+            $this->cache->set($cacheKey, $this->conditionSerializer->serialize($result), $ttl);
+        }
+
+        return $result;
     }
 
     private function getConditionCacheKey(ProcessorConfig $config, string $input): string
     {
-        return hash('sha256', $config->getFieldSet()->getSetName() . '~' . $input . '~' . \get_class($this->inputProcessor));
+        return hash('sha256', $config->getFieldSet()->getSetName() . '~' . $input . '~' . $this->inputProcessor::class);
     }
 }

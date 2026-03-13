@@ -22,45 +22,54 @@ use Rollerworks\Component\Search\Exception\UnexpectedTypeException;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  * @author Florian Eckerstorfer <florian@eckerstorfer.org>
+ *
+ * @psalm-type DateFormat \IntlDateFormatter::NONE|\IntlDateFormatter::FULL|\IntlDateFormatter::LONG|\IntlDateFormatter::MEDIUM|\IntlDateFormatter::SHORT
+ * @psalm-type CalendarType \IntlDateFormatter::GREGORIAN|\IntlDateFormatter::TRADITIONAL|\IntlCalendar
  */
 final class DateTimeToLocalizedStringTransformer extends BaseDateTimeTransformer
 {
-    private $dateFormat;
-    private $timeFormat;
-    private $pattern;
-    private $calendar;
+    private int $dateFormat;
+    private int $timeFormat;
+    private int | \IntlCalendar $calendar;
 
     /**
-     * @see BaseDateTimeTransformer::formats for available format options
-     *
      * @param int    $calendar One of the \IntlDateFormatter calendar constants
      * @param string $pattern  A pattern to pass to \IntlDateFormatter
      *
+     * @psalm-param DateFormat   $dateFormat
+     * @psalm-param DateFormat   $timeFormat
+     * @psalm-param CalendarType $calendar
+     *
      * @throws UnexpectedTypeException If a format is not supported or if a timezone is not a string
      */
-    public function __construct(?string $inputTimezone = null, ?string $outputTimezone = null, ?int $dateFormat = null, ?int $timeFormat = null, int|\IntlCalendar $calendar = \IntlDateFormatter::GREGORIAN, ?string $pattern = null)
-    {
+    public function __construct(
+        ?string $inputTimezone = null,
+        ?string $outputTimezone = null,
+        ?int $dateFormat = null,
+        ?int $timeFormat = null,
+        int | \IntlCalendar $calendar = \IntlDateFormatter::GREGORIAN,
+        private readonly ?string $pattern = null,
+    ) {
         parent::__construct($inputTimezone, $outputTimezone);
 
         $dateFormat ??= \IntlDateFormatter::MEDIUM;
         $timeFormat ??= \IntlDateFormatter::SHORT;
 
-        if (!\in_array($dateFormat, self::$formats, true)) {
+        if (! \in_array($dateFormat, self::$formats, true)) {
             throw new UnexpectedTypeException($dateFormat, implode('", "', self::$formats));
         }
 
-        if (!\in_array($timeFormat, self::$formats, true)) {
+        if (! \in_array($timeFormat, self::$formats, true)) {
             throw new UnexpectedTypeException($timeFormat, implode('", "', self::$formats));
         }
 
-        if (\is_int($calendar) && !\in_array($calendar, [\IntlDateFormatter::GREGORIAN, \IntlDateFormatter::TRADITIONAL], true)) {
+        if (\is_int($calendar) && ! \in_array($calendar, [\IntlDateFormatter::GREGORIAN, \IntlDateFormatter::TRADITIONAL], true)) {
             throw new InvalidArgumentException('The "calendar" option should be either an \IntlDateFormatter constant or an \IntlCalendar instance.');
         }
 
         $this->dateFormat = $dateFormat;
         $this->timeFormat = $timeFormat;
         $this->calendar = $calendar;
-        $this->pattern = $pattern;
     }
 
     /**
@@ -171,7 +180,7 @@ final class DateTimeToLocalizedStringTransformer extends BaseDateTimeTransformer
      *
      * @throws TransformationFailedException in case the date formatter can not be constructed
      */
-    protected function getIntlDateFormatter(bool $ignoreTimezone = false, bool $ignoreStrict = false): \IntlDateFormatter
+    private function getIntlDateFormatter(bool $ignoreTimezone = false, bool $ignoreStrict = false): \IntlDateFormatter
     {
         $dateFormat = $this->dateFormat;
         $timeFormat = $this->timeFormat;
@@ -192,7 +201,7 @@ final class DateTimeToLocalizedStringTransformer extends BaseDateTimeTransformer
         return $intlDateFormatter;
     }
 
-    protected function isPatternDateOnly(): bool
+    private function isPatternDateOnly(): bool
     {
         if ($this->pattern === null) {
             return false;
@@ -202,6 +211,6 @@ final class DateTimeToLocalizedStringTransformer extends BaseDateTimeTransformer
         $pattern = preg_replace("#'(.*?)'#", '', $this->pattern);
 
         // check for the absence of time-related placeholders
-        return preg_match('#[ahHkKmsSAzZOvVxX]#', $pattern) === 0;
+        return preg_match('#[ahHkKmsSAzZOvVxX]#', (string) $pattern) === 0;
     }
 }

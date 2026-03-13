@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rollerworks\Component\Search\Tests\Field;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Rollerworks\Component\Search\DataTransformer;
 use Rollerworks\Component\Search\Exception\BadMethodCallException;
@@ -26,15 +27,10 @@ use Rollerworks\Component\Search\ValueComparator;
  */
 final class OrderFieldTest extends TestCase
 {
-    /**
-     * @var ResolvedFieldType
-     */
-    private $resolvedType;
+    /** @var MockObject&ResolvedFieldType */
+    private MockObject $resolvedType;
 
-    /**
-     * @var OrderField
-     */
-    private $field;
+    private OrderField $field;
 
     protected function setUp(): void
     {
@@ -97,9 +93,8 @@ final class OrderFieldTest extends TestCase
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('does not support supporting custom value types');
 
-        $this->field->setValueTypeSupport(Range::class, true);
-
         self::assertFalse($this->field->supportValueType(Range::class));
+        $this->field->setValueTypeSupport(Range::class, true);
     }
 
     /** @test */
@@ -116,8 +111,8 @@ final class OrderFieldTest extends TestCase
 
         $comparisonObj = $this->getMockBuilder(ValueComparator::class)->getMock();
 
-        $this->field->setValueComparator($comparisonObj);
         self::assertNull($this->field->getValueComparator());
+        $this->field->setValueComparator($comparisonObj);
     }
 
     /** @test */

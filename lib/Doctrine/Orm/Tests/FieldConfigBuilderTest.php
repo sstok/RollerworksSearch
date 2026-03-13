@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rollerworks\Component\Search\Tests\Doctrine\Orm;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -22,6 +24,8 @@ use Rollerworks\Component\Search\Extension\Core\Type\IntegerType;
 use Rollerworks\Component\Search\Extension\Core\Type\TextType;
 use Rollerworks\Component\Search\Searches;
 use Rollerworks\Component\Search\SearchFactory;
+use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceCustomer;
+use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInvoice;
 
 /**
  * @internal
@@ -30,25 +34,15 @@ final class FieldConfigBuilderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public const CUSTOMER_CLASS = Fixtures\Entity\ECommerceCustomer::class;
-    public const INVOICE_CLASS = Fixtures\Entity\ECommerceInvoice::class;
-
-    /**
-     * @var ObjectProphecy
-     */
-    private $em;
-
-    /**
-     * @var SearchFactory
-     */
-    private $searchFactory;
+    private SearchFactory $searchFactory;
+    private ObjectProphecy $em;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->searchFactory = Searches::createSearchFactoryBuilder()->getSearchFactory();
-        $this->em = $this->prophesize('Doctrine\ORM\EntityManagerInterface');
+        $this->em = $this->prophesize(EntityManagerInterface::class);
     }
 
     private function getFieldSet($build = true)
@@ -64,9 +58,12 @@ final class FieldConfigBuilderTest extends TestCase
         return $build ? $fieldSet->getFieldSet('invoice') : $fieldSet;
     }
 
-    private function getClassMetadata(string $entityClass, array $fields): void
+    /**
+     * @param array<string, array{type: string}|array{join: array{class: string, column: string, property: string, type: string}}|array{join_multi: true}> $fields
+     */
+    private function expectClassMetadata(string $entityClass, array $fields): void
     {
-        $classMetadata = $this->prophesize('Doctrine\ORM\Mapping\ClassMetadata');
+        $classMetadata = $this->prophesize(ClassMetadata::class);
         $classMetadata->getName()->willReturn($entityClass);
 
         foreach ($fields as $property => $field) {
@@ -75,11 +72,9 @@ final class FieldConfigBuilderTest extends TestCase
                 $classMetadata->hasAssociation($property)->willReturn(true);
                 $classMetadata->getTypeOfField($property)->willReturn(null);
                 $classMetadata->getAssociationTargetClass($property)->willReturn($field['join']['class']);
-                $classMetadata->getSingleAssociationReferencedJoinColumnName($property)->willReturn(
-                    $field['join']['column']
-                );
+                $classMetadata->getSingleAssociationReferencedJoinColumnName($property)->willReturn($field['join']['column']);
 
-                $joinClassMetadata = $this->prophesize('Doctrine\ORM\Mapping\ClassMetadata');
+                $joinClassMetadata = $this->prophesize(ClassMetadata::class);
                 $joinClassMetadata->getName()->willReturn($field['join']['class']);
                 $joinClassMetadata->getFieldForColumn($field['join']['column'])->willReturn($field['join']['property']);
                 $joinClassMetadata->getTypeOfField($field['join']['property'])->willReturn($field['join']['type']);
@@ -102,12 +97,12 @@ final class FieldConfigBuilderTest extends TestCase
     /** @test */
     public function resolve_with_default_entity(): void
     {
-        $this->getClassMetadata(self::INVOICE_CLASS, [
+        $this->expectClassMetadata(ECommerceInvoice::class, [
             'id' => ['type' => 'integer'],
             'parent' => ['type' => 'integer'],
         ]);
 
-        $this->getClassMetadata(self::CUSTOMER_CLASS, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'first_name' => ['type' => 'string'],
             'last_name' => ['type' => 'string'],
@@ -115,11 +110,11 @@ final class FieldConfigBuilderTest extends TestCase
 
         $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $fieldSet = $this->getFieldSet());
 
-        $fieldConfigBuilder->setDefaultEntity(self::INVOICE_CLASS, 'I');
+        $fieldConfigBuilder->setDefaultEntity(ECommerceInvoice::class, 'I');
         $fieldConfigBuilder->setField('id', 'id', null, null, 'smallint');
         $fieldConfigBuilder->setField('credit_parent#0', 'parent');
 
-        $fieldConfigBuilder->setDefaultEntity(self::CUSTOMER_CLASS, 'C');
+        $fieldConfigBuilder->setDefaultEntity(ECommerceCustomer::class, 'C');
         $fieldConfigBuilder->setField('customer', 'id');
         $fieldConfigBuilder->setField('customer_name#first_name', 'first_name');
         $fieldConfigBuilder->setField('customer_name#last_name', 'last_name');
@@ -127,52 +122,52 @@ final class FieldConfigBuilderTest extends TestCase
         $fields = $fieldConfigBuilder->getFields();
 
         // Invoice
-        self::assertEquals(new QueryField('id', $fieldSet->get('id'), 'smallint', 'id', 'I', self::INVOICE_CLASS), $fields['id']['']);
-        self::assertEquals(new QueryField('credit_parent#0', $fieldSet->get('credit_parent'), 'integer', 'parent', 'I', self::INVOICE_CLASS), $fields['credit_parent']['0']);
+        self::assertEquals(new QueryField('id', $fieldSet->get('id'), 'smallint', 'id', 'I', ECommerceInvoice::class), $fields['id']['']);
+        self::assertEquals(new QueryField('credit_parent#0', $fieldSet->get('credit_parent'), 'integer', 'parent', 'I', ECommerceInvoice::class), $fields['credit_parent']['0']);
 
         // Customer
-        self::assertEquals(new QueryField('customer', $fieldSet->get('customer'), 'integer', 'id', 'C', self::CUSTOMER_CLASS), $fields['customer']['']);
-        self::assertEquals(new QueryField('customer_name#first_name', $fieldSet->get('customer_name'), 'string', 'first_name', 'C', self::CUSTOMER_CLASS), $fields['customer_name']['first_name']);
-        self::assertEquals(new QueryField('customer_name#last_name', $fieldSet->get('customer_name'), 'string', 'last_name', 'C', self::CUSTOMER_CLASS), $fields['customer_name']['last_name']);
+        self::assertEquals(new QueryField('customer', $fieldSet->get('customer'), 'integer', 'id', 'C', ECommerceCustomer::class), $fields['customer']['']);
+        self::assertEquals(new QueryField('customer_name#first_name', $fieldSet->get('customer_name'), 'string', 'first_name', 'C', ECommerceCustomer::class), $fields['customer_name']['first_name']);
+        self::assertEquals(new QueryField('customer_name#last_name', $fieldSet->get('customer_name'), 'string', 'last_name', 'C', ECommerceCustomer::class), $fields['customer_name']['last_name']);
     }
 
     /** @test */
     public function resolve_with_full_field_mapping(): void
     {
-        $this->getClassMetadata(self::INVOICE_CLASS, [
+        $this->expectClassMetadata(ECommerceInvoice::class, [
             'id' => ['type' => 'integer'],
             'parent' => ['type' => 'integer'],
             'invoice_id' => ['type' => 'integer'],
             'parent_id' => ['type' => 'integer'],
         ]);
 
-        $this->getClassMetadata(self::CUSTOMER_CLASS, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'first_name' => ['type' => 'string'],
             'last_name' => ['type' => 'string'],
         ]);
 
         $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $fieldSet = $this->getFieldSet());
-        $fieldConfigBuilder->setField('id', 'id', 'I', self::INVOICE_CLASS, 'smallint');
-        $fieldConfigBuilder->setField('credit_parent#0', 'parent', 'I', self::INVOICE_CLASS);
+        $fieldConfigBuilder->setField('id', 'id', 'I', ECommerceInvoice::class, 'smallint');
+        $fieldConfigBuilder->setField('credit_parent#0', 'parent', 'I', ECommerceInvoice::class);
 
         $fields = $fieldConfigBuilder->getFields();
 
         // Invoice
-        self::assertEquals(new QueryField('id', $fieldSet->get('id'), 'smallint', 'id', 'I', self::INVOICE_CLASS), $fields['id']['']);
-        self::assertEquals(new QueryField('credit_parent#0', $fieldSet->get('credit_parent'), 'integer', 'parent', 'I', self::INVOICE_CLASS), $fields['credit_parent']['0']);
+        self::assertEquals(new QueryField('id', $fieldSet->get('id'), 'smallint', 'id', 'I', ECommerceInvoice::class), $fields['id']['']);
+        self::assertEquals(new QueryField('credit_parent#0', $fieldSet->get('credit_parent'), 'integer', 'parent', 'I', ECommerceInvoice::class), $fields['credit_parent']['0']);
     }
 
     /** @test */
     public function fails_to_resolve_with_join_association(): void
     {
-        $this->getClassMetadata(
-            self::INVOICE_CLASS,
+        $this->expectClassMetadata(
+            ECommerceInvoice::class,
             [
                 'id' => ['type' => 'integer'],
                 'parent' => [
                     'join' => [
-                        'class' => self::INVOICE_CLASS,
+                        'class' => ECommerceInvoice::class,
                         'property' => 'id',
                         'type' => 'integer',
                         'column' => 'invoice_id',
@@ -182,27 +177,38 @@ final class FieldConfigBuilderTest extends TestCase
             ]
         );
 
-        $this->getClassMetadata(self::CUSTOMER_CLASS, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'name' => ['type' => 'string'],
         ]);
 
         $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $this->getFieldSet());
 
-        $fieldConfigBuilder->setDefaultEntity(self::INVOICE_CLASS, 'I');
+        $fieldConfigBuilder->setDefaultEntity(ECommerceInvoice::class, 'I');
         $fieldConfigBuilder->setField('id', 'id', null, null, 'smallint');
 
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Entity field "' . self::INVOICE_CLASS . '"#parent is a JOIN association');
+        $this->expectExceptionMessage('Entity field "' . ECommerceInvoice::class . '"#parent is a JOIN association');
 
         $fieldConfigBuilder->setField('credit_parent', 'parent', 'I', null, 'parent_id');
     }
 
     /** @test */
+    public function fails_when_no_entity_is_provided(): void
+    {
+        $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $this->getFieldSet());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No default entity is set, either provide the entity or set a default entity first.');
+
+        $fieldConfigBuilder->setField('id', 'id');
+    }
+
+    /** @test */
     public function fails_to_resolve_with_multi_column_join_association(): void
     {
-        $this->getClassMetadata(
-            self::INVOICE_CLASS,
+        $this->expectClassMetadata(
+            ECommerceInvoice::class,
             [
                 'id' => ['type' => 'integer'],
                 'parent' => [
@@ -211,17 +217,17 @@ final class FieldConfigBuilderTest extends TestCase
             ]
         );
 
-        $this->getClassMetadata(self::CUSTOMER_CLASS, [
+        $this->expectClassMetadata(ECommerceCustomer::class, [
             'id' => ['type' => 'integer'],
             'name' => ['type' => 'string'],
         ]);
 
         $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $this->getFieldSet());
-        $fieldConfigBuilder->setField('id', 'id', 'I', self::INVOICE_CLASS, 'smallint');
+        $fieldConfigBuilder->setField('id', 'id', 'I', ECommerceInvoice::class, 'smallint');
 
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Entity field "' . self::INVOICE_CLASS . '"#parent is a JOIN association');
+        $this->expectExceptionMessage('Entity field "' . ECommerceInvoice::class . '"#parent is a JOIN association');
 
-        $fieldConfigBuilder->setField('credit_parent#0', 'parent', 'I', self::INVOICE_CLASS);
+        $fieldConfigBuilder->setField('credit_parent#0', 'parent', 'I', ECommerceInvoice::class);
     }
 }

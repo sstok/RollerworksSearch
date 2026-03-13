@@ -22,12 +22,9 @@ use Doctrine\DBAL\Logging\SQLLogger;
  */
 final class LegacySqlLogger implements SQLLogger
 {
-    /** @var QueryLog */
-    private $queryLog;
-
-    public function __construct(QueryLog $queryLog)
-    {
-        $this->queryLog = $queryLog;
+    public function __construct(
+        private readonly QueryLog $queryLog,
+    ) {
     }
 
     public function startQuery($sql, ?array $params = null, ?array $types = null): void

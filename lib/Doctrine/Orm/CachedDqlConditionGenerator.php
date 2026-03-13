@@ -38,17 +38,10 @@ use Rollerworks\Component\Search\SearchCondition;
  */
 class CachedDqlConditionGenerator extends AbstractCachedConditionGenerator implements ConditionGenerator
 {
-    /**
-     * @var FieldConfigBuilder
-     */
-    private $fieldsConfig;
+    private FieldConfigBuilder $fieldsConfig;
+    private QueryBuilder $qb;
 
-    /**
-     * @var QueryBuilder
-     */
-    private $qb;
-
-    public function __construct(QueryBuilder $query, SearchCondition $searchCondition, Cache $cacheDriver, \DateInterval|int|null $ttl = null)
+    public function __construct(QueryBuilder $query, SearchCondition $searchCondition, Cache $cacheDriver, \DateInterval | int | null $ttl = null)
     {
         parent::__construct($cacheDriver, $searchCondition, $ttl);
 

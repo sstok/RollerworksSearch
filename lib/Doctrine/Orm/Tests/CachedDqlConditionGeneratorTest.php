@@ -21,6 +21,7 @@ use Rollerworks\Component\Search\Doctrine\Orm\CachedDqlConditionGenerator;
 use Rollerworks\Component\Search\Doctrine\Orm\ConditionGenerator;
 use Rollerworks\Component\Search\SearchCondition;
 use Rollerworks\Component\Search\SearchConditionBuilder;
+use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceCustomer;
 use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInvoice;
 
 /**
@@ -30,20 +31,11 @@ use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInv
  */
 final class CachedDqlConditionGeneratorTest extends OrmTestCase
 {
-    /**
-     * @var QueryBuilder
-     */
-    private $query;
+    private QueryBuilder $query;
+    protected CachedDqlConditionGenerator $conditionGenerator;
 
-    /**
-     * @var CachedDqlConditionGenerator
-     */
-    protected $conditionGenerator;
-
-    /**
-     * @var CacheInterface|MockObject
-     */
-    protected $cacheDriver;
+    /** @var CacheInterface|MockObject */
+    protected MockObject $cacheDriver;
 
     public const CACHE_KEY = 'df58623bc959d1cf34d360c31f4d57b21ee51ffb5179059507b90c47035075dd';
 
@@ -315,11 +307,11 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
     private function createCachedConditionGenerator(CacheInterface $cacheDriver, SearchCondition $searchCondition, ?QueryBuilder $qb = null): CachedDqlConditionGenerator
     {
         $conditionGenerator = new CachedDqlConditionGenerator($qb ?? $this->query, $searchCondition, $cacheDriver, 60);
-        $conditionGenerator->setDefaultEntity(self::INVOICE_CLASS, 'I');
+        $conditionGenerator->setDefaultEntity(ECommerceInvoice::class, 'I');
         $conditionGenerator->setField('id', 'id', null, null, 'smallint');
         $conditionGenerator->setField('@id', 'id');
 
-        $conditionGenerator->setDefaultEntity(self::CUSTOMER_CLASS, 'C');
+        $conditionGenerator->setDefaultEntity(ECommerceCustomer::class, 'C');
         $conditionGenerator->setField('customer', 'id', null, null, 'integer');
         $conditionGenerator->setField('@customer', 'id');
         $conditionGenerator->setField('customer_name#first_name', 'firstName');

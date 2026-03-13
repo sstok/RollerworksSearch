@@ -22,26 +22,11 @@ use Rollerworks\Component\Search\Exception\TransformationFailedException;
  */
 final class BirthdayTransformer implements DataTransformer
 {
-    /**
-     * @var DataTransformer
-     */
-    private $transformer;
-
-    /**
-     * @var bool
-     */
-    private $allowAge;
-
-    /**
-     * @var bool
-     */
-    private $allowFutureDate;
-
-    public function __construct(DataTransformer $transformer, bool $allowAge = true, bool $allowFutureDate = false)
-    {
-        $this->transformer = $transformer;
-        $this->allowFutureDate = $allowFutureDate;
-        $this->allowAge = $allowAge;
+    public function __construct(
+        private readonly DataTransformer $transformer,
+        private readonly bool $allowAge = true,
+        private readonly bool $allowFutureDate = false,
+    ) {
     }
 
     public function transform($value)
@@ -84,7 +69,7 @@ final class BirthdayTransformer implements DataTransformer
 
     private function transformWhenInteger($value)
     {
-        if (ctype_digit($value)) {
+        if (ctype_digit((string) $value)) {
             return (int) $value;
         }
 

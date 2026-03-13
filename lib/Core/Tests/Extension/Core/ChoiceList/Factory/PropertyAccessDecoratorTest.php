@@ -30,15 +30,10 @@ use Symfony\Component\PropertyAccess\PropertyPath;
  */
 final class PropertyAccessDecoratorTest extends TestCase
 {
-    /**
-     * @var MockObject|null
-     */
-    private $decoratedFactory;
+    /** @var MockObject&ChoiceListFactory */
+    private MockObject $decoratedFactory;
 
-    /**
-     * @var PropertyAccessDecorator|null
-     */
-    private $factory;
+    private PropertyAccessDecorator $factory;
 
     protected function setUp(): void
     {
@@ -61,7 +56,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createListFromChoices')
             ->with($choices, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($choices, $callback) => new ArrayChoiceList(array_map($callback, $choices)))
+            ->willReturnCallback(static fn ($choices, $callback): ArrayChoiceList => new ArrayChoiceList(array_map($callback, $choices)))
         ;
 
         self::assertChoiceListEquals($this->factory->createListFromChoices($choices, 'property'));
@@ -75,7 +70,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createListFromChoices')
             ->with($choices, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($choices, $callback) => new ArrayChoiceList(array_map($callback, $choices)))
+            ->willReturnCallback(static fn ($choices, $callback): ArrayChoiceList => new ArrayChoiceList(array_map($callback, $choices)))
         ;
 
         self::assertChoiceListEquals($this->factory->createListFromChoices($choices, new PropertyPath('property')));
@@ -89,7 +84,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createListFromLoader')
             ->with($loader, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($loader, $callback) => new ArrayChoiceList([$callback((object) ['property' => 'value'])]))
+            ->willReturnCallback(static fn ($loader, $callback): ArrayChoiceList => new ArrayChoiceList([$callback((object) ['property' => 'value'])]))
         ;
 
         self::assertChoiceListEquals($this->factory->createListFromLoader($loader, 'property'));
@@ -105,7 +100,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createListFromChoices')
             ->with($choices, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($choices, $callback) => new ArrayChoiceList(array_map($callback, $choices)))
+            ->willReturnCallback(static fn ($choices, $callback): ArrayChoiceList => new ArrayChoiceList(array_map($callback, $choices)))
         ;
 
         self::assertChoiceListEquals($this->factory->createListFromChoices($choices, 'property'), null);
@@ -117,12 +112,11 @@ final class PropertyAccessDecoratorTest extends TestCase
     public function create_from_choice_loader_assume_null_if_value_property_path_unreadable(): void
     {
         $loader = $this->createMock(ChoiceLoader::class);
-        $list = null;
 
         $this->decoratedFactory->expects(self::once())
             ->method('createListFromLoader')
             ->with($loader, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($loader, $callback) => new ArrayChoiceList([$callback(null)]))
+            ->willReturnCallback(static fn ($loader, $callback): ArrayChoiceList => new ArrayChoiceList([$callback(null)]))
         ;
 
         self::assertChoiceListEquals($this->factory->createListFromLoader($loader, 'property'), null);
@@ -136,7 +130,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createListFromLoader')
             ->with($loader, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($loader, $callback) => new ArrayChoiceList([$callback((object) ['property' => 'value'])]))
+            ->willReturnCallback(static fn ($loader, $callback): ArrayChoiceList => new ArrayChoiceList([$callback((object) ['property' => 'value'])]))
         ;
 
         self::assertChoiceListEquals($this->factory->createListFromLoader($loader, new PropertyPath('property')));
@@ -154,7 +148,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred) => new ChoiceListView([], [$preferred((object) ['property' => true])]))
+            ->willReturnCallback(static fn ($list, $preferred): ChoiceListView => new ChoiceListView([], [$preferred((object) ['property' => true])]))
         ;
 
         self::assertEquals(
@@ -174,7 +168,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred) => new ChoiceListView([], [$preferred((object) ['property' => true])]))
+            ->willReturnCallback(static fn ($list, $preferred): ChoiceListView => new ChoiceListView([], [$preferred((object) ['property' => true])]))
         ;
 
         self::assertEquals(
@@ -196,7 +190,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred) => new ChoiceListView([], [$preferred((object) ['category' => null])]))
+            ->willReturnCallback(static fn ($list, $preferred): ChoiceListView => new ChoiceListView([], [$preferred((object) ['category' => null])]))
         ;
 
         self::assertEquals(
@@ -216,7 +210,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label) => new ChoiceListView([$label((object) ['property' => 'label'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label): ChoiceListView => new ChoiceListView([$label((object) ['property' => 'label'])]))
         ;
 
         self::assertEquals(
@@ -237,7 +231,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label) => new ChoiceListView([$label((object) ['property' => 'label'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label): ChoiceListView => new ChoiceListView([$label((object) ['property' => 'label'])]))
         ;
 
         self::assertEquals(
@@ -258,7 +252,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label, $index) => new ChoiceListView([$index((object) ['property' => 'index'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label, $index): ChoiceListView => new ChoiceListView([$index((object) ['property' => 'index'])]))
         ;
 
         self::assertEquals(
@@ -280,7 +274,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label, $index) => new ChoiceListView([$index((object) ['property' => 'index'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label, $index): ChoiceListView => new ChoiceListView([$index((object) ['property' => 'index'])]))
         ;
 
         self::assertEquals(
@@ -302,7 +296,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, null, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy) => new ChoiceListView([$groupBy((object) ['property' => 'group'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy): ChoiceListView => new ChoiceListView([$groupBy((object) ['property' => 'group'])]))
         ;
 
         self::assertEquals(
@@ -325,7 +319,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, null, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy) => new ChoiceListView([$groupBy((object) ['property' => 'group'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy): ChoiceListView => new ChoiceListView([$groupBy((object) ['property' => 'group'])]))
         ;
 
         self::assertEquals(
@@ -350,7 +344,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, null, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy) => new ChoiceListView([$groupBy((object) ['group' => null])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy): ChoiceListView => new ChoiceListView([$groupBy((object) ['group' => null])]))
         ;
 
         self::assertEquals(
@@ -373,7 +367,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, null, null, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy, $attr) => new ChoiceListView([$attr((object) ['property' => 'attr'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy, $attr): ChoiceListView => new ChoiceListView([$attr((object) ['property' => 'attr'])]))
         ;
 
         self::assertEquals(
@@ -397,7 +391,7 @@ final class PropertyAccessDecoratorTest extends TestCase
         $this->decoratedFactory->expects(self::once())
             ->method('createView')
             ->with($list, null, null, null, null, self::isInstanceOf('\Closure'))
-            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy, $attr) => new ChoiceListView([$attr((object) ['property' => 'attr'])]))
+            ->willReturnCallback(static fn ($list, $preferred, $label, $index, $groupBy, $attr): ChoiceListView => new ChoiceListView([$attr((object) ['property' => 'attr'])]))
         ;
 
         self::assertEquals(

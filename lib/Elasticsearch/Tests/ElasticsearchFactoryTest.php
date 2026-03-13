@@ -28,10 +28,7 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
  */
 final class ElasticsearchFactoryTest extends ElasticsearchTestCase
 {
-    /**
-     * @var ElasticsearchFactory
-     */
-    protected $factory;
+    protected ElasticsearchFactory $factory;
 
     /** @test */
     public function create_condition_generator(): void

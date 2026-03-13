@@ -58,7 +58,7 @@ final class DateIntervalConversion implements ValueConversion
         $handler = static function (array $units) use ($negative) {
             foreach ($units as &$value) {
                 // MySQL doesn't support plural names.
-                $value = mb_strtoupper(rtrim($value, 's'));
+                $value = mb_strtoupper(mb_rtrim((string) $value, 's'));
             }
 
             return implode($negative ? ' - INTERVAL ' : ' + INTERVAL ', $units);

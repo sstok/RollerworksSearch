@@ -16,6 +16,7 @@ namespace Rollerworks\Component\Search\Elasticsearch;
 use Elastica\Query;
 use Rollerworks\Component\Search\Exception\BadMethodCallException;
 use Rollerworks\Component\Search\Exception\UnknownFieldException;
+use Rollerworks\Component\Search\FieldSet;
 use Rollerworks\Component\Search\ParameterBag;
 use Rollerworks\Component\Search\SearchCondition;
 use Rollerworks\Component\Search\SearchOrder;
@@ -65,7 +66,6 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
 
     // note: this one is NOT available for Elasticsearch, we use it as a named constant only
     private const COMPARISON_UNEQUAL = '<>';
-
     private const COMPARISON_OPERATOR_MAP = [
         '<>' => self::COMPARISON_UNEQUAL,
         '<' => self::COMPARISON_LESS,
@@ -74,21 +74,16 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
         '>=' => self::COMPARISON_GREATER_OR_EQUAL,
     ];
 
-    private $searchCondition;
-    private $fieldSet;
+    private FieldSet $fieldSet;
 
-    /** @var FieldMapping[] $mapping */
-    private $mappings;
+    /** @var array<string, FieldMapping> $mapping */
+    private array $mappings = [];
 
-    /** @var ParameterBag|null */
-    private $parameterBag;
-
-    public function __construct(SearchCondition $searchCondition, ?ParameterBag $parameterBag = null)
-    {
-        $this->searchCondition = $searchCondition;
-        $this->parameterBag = $parameterBag;
-
-        $this->fieldSet = $searchCondition->getFieldSet();
+    public function __construct(
+        private readonly SearchCondition $searchCondition,
+        private readonly ?ParameterBag $parameterBag = null,
+    ) {
+        $this->fieldSet = $this->searchCondition->getFieldSet();
     }
 
     public function registerField(string $fieldName, string $property, array $conditions = [], array $options = [])
@@ -138,6 +133,9 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
         return new Query(array_filter([self::QUERY => $rootGroupCondition, self::SORT => $orderClause]));
     }
 
+    /**
+     * @return FieldMapping[]
+     */
     public function getMappings(): array
     {
         $mappings = [];
@@ -145,16 +143,21 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
 
         $this->getGroupMappings($group, $mappings);
 
-        if (null !== $primaryCondition = $this->searchCondition->getPrimaryCondition()) {
+        $primaryCondition = $this->searchCondition->getPrimaryCondition();
+
+        if ($primaryCondition !== null) {
             $this->getGroupMappings($primaryCondition->getValuesGroup(), $mappings);
         }
 
         if ($mappings === []) {
-            if (null !== $searchOrder = $this->searchCondition->getOrder()) {
+            $searchOrder = $this->searchCondition->getOrder();
+            $primarySearchOrder = $primaryCondition?->getOrder();
+
+            if ($searchOrder !== null) {
                 $this->getGroupMappings($searchOrder->getValuesGroup(), $mappings);
             }
 
-            if ($primaryCondition !== null && null !== $primarySearchOrder = $primaryCondition->getOrder()) {
+            if ($primarySearchOrder !== null) {
                 $this->getGroupMappings($primarySearchOrder->getValuesGroup(), $mappings);
             }
         }
@@ -188,6 +191,9 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
         return self::COMPARISON_OPERATOR_MAP[$operator];
     }
 
+    /**
+     * @param-out array<string, FieldMapping> $mappings
+     */
     private function getGroupMappings(ValuesGroup $group, array &$mappings): void
     {
         foreach ($group->getFields() as $fieldName => $valuesBag) {
@@ -371,7 +377,7 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
         }
     }
 
-    private function convertValue($value, ?ValueConversion $converter, bool $injectParams)
+    private function convertValue(mixed $value, ?ValueConversion $converter, bool $injectParams)
     {
         $value = $injectParams ? $this->injectParameters($value) : $value;
 
@@ -576,7 +582,7 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
         }
 
         if (\is_array($template)) {
-            return array_map([$this->parameterBag, 'injectParameters'], $template);
+            return array_map($this->parameterBag->injectParameters(...), $template);
         }
 
         return $this->parameterBag->injectParameters($template);
@@ -652,29 +658,27 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
     {
         $conditions = [];
 
-        if ($mapping->conditions !== []) {
-            foreach ($mapping->conditions as $mappingCondition) {
-                if ($mappingCondition->propertyQuery) {
-                    $hints->context = QueryPreparationHints::CONTEXT_PRECONDITION_QUERY;
-                    $values = $mappingCondition->propertyQuery;
-                } else {
-                    $hints->context = QueryPreparationHints::CONTEXT_PRECONDITION_VALUE;
-                    $values = (array) $mappingCondition->propertyValue;
-                }
-
-                $conditions[] = $this->prepareProcessedValuesQuery(
-                    $mappingCondition->propertyName,
-                    $values,
-                    $hints,
-                    $mappingCondition->queryConversion,
-                    $mappingCondition->valueConversion,
-                    $mappingCondition->nested,
-                    $mappingCondition->join,
-                    $injectParams,
-                    [],
-                    $mappingCondition->options
-                );
+        foreach ($mapping->conditions as $mappingCondition) {
+            if ($mappingCondition->propertyQuery) {
+                $hints->context = QueryPreparationHints::CONTEXT_PRECONDITION_QUERY;
+                $values = $mappingCondition->propertyQuery;
+            } else {
+                $hints->context = QueryPreparationHints::CONTEXT_PRECONDITION_VALUE;
+                $values = (array) $mappingCondition->propertyValue;
             }
+
+            $conditions[] = $this->prepareProcessedValuesQuery(
+                $mappingCondition->propertyName,
+                $values,
+                $hints,
+                $mappingCondition->queryConversion,
+                $mappingCondition->valueConversion,
+                $mappingCondition->nested,
+                $mappingCondition->join,
+                $injectParams,
+                [],
+                $mappingCondition->options
+            );
         }
 
         return $conditions;

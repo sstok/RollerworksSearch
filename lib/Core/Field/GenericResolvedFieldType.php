@@ -26,32 +26,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GenericResolvedFieldType implements ResolvedFieldType
 {
-    /** @var FieldType */
-    private $innerType;
-
-    /** @var FieldTypeExtension[] */
-    private $typeExtensions;
-
-    /** @var ResolvedFieldType|null */
-    private $parent;
-
-    /** @var OptionsResolver */
-    private $optionsResolver;
+    private ?OptionsResolver $optionsResolver = null;
 
     /**
+     * @param FieldTypeExtension[] $typeExtensions
+     *
      * @throws UnexpectedTypeException When at least one of the given extensions is not an FieldTypeExtension
      */
-    public function __construct(FieldType $innerType, array $typeExtensions = [], ?ResolvedFieldType $parent = null)
-    {
+    public function __construct(
+        private readonly FieldType $innerType,
+        private readonly array $typeExtensions = [],
+        private readonly ?ResolvedFieldType $parent = null,
+    ) {
         foreach ($typeExtensions as $extension) {
             if (! $extension instanceof FieldTypeExtension) {
                 throw new UnexpectedTypeException($extension, FieldTypeExtension::class);
             }
         }
-
-        $this->innerType = $innerType;
-        $this->typeExtensions = $typeExtensions;
-        $this->parent = $parent;
     }
 
     public function getParent(): ?ResolvedFieldType
@@ -126,18 +117,15 @@ class GenericResolvedFieldType implements ResolvedFieldType
 
     public function getOptionsResolver(): OptionsResolver
     {
-        if ($this->optionsResolver === null) {
-            if ($this->parent !== null) {
-                $this->optionsResolver = clone $this->parent->getOptionsResolver();
-            } else {
-                $this->optionsResolver = new OptionsResolver();
-            }
+        if ($this->optionsResolver !== null) {
+            return $this->optionsResolver;
+        }
 
-            $this->innerType->configureOptions($this->optionsResolver);
+        $this->optionsResolver = $this->parent !== null ? clone $this->parent->getOptionsResolver() : new OptionsResolver();
+        $this->innerType->configureOptions($this->optionsResolver);
 
-            foreach ($this->typeExtensions as $extension) {
-                $extension->configureOptions($this->optionsResolver);
-            }
+        foreach ($this->typeExtensions as $extension) {
+            $extension->configureOptions($this->optionsResolver);
         }
 
         return $this->optionsResolver;
@@ -150,11 +138,7 @@ class GenericResolvedFieldType implements ResolvedFieldType
      */
     protected function newField($name, array $options): FieldConfig
     {
-        if (OrderField::isOrder($name)) {
-            return new OrderField($name, $this, $options);
-        }
-
-        return new SearchField($name, $this, $options);
+        return OrderField::isOrder($name) ? new OrderField($name, $this, $options) : new SearchField($name, $this, $options);
     }
 
     /**

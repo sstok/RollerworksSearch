@@ -22,10 +22,14 @@ use Rollerworks\Component\Search\Field\FieldConfig;
  */
 final class OrmQueryField extends QueryField
 {
-    public string $entity;
-
-    public function __construct(string $mappingName, FieldConfig $fieldConfig, string $dbType, string $column, string $alias, string $entity)
-    {
+    public function __construct(
+        string $mappingName,
+        FieldConfig $fieldConfig,
+        string $dbType,
+        string $column,
+        string $alias,
+        public string $entity,
+    ) {
         parent::__construct(
             $mappingName,
             $fieldConfig,
@@ -33,8 +37,6 @@ final class OrmQueryField extends QueryField
             $column,
             $alias
         );
-
-        $this->entity = $entity;
     }
 
     protected function initConversions(FieldConfig $fieldConfig): void
@@ -45,12 +47,7 @@ final class OrmQueryField extends QueryField
             $converter = $converter();
         }
 
-        if ($converter instanceof ColumnConversion) {
-            $this->columnConversion = $converter;
-        }
-
-        if ($converter instanceof ValueConversion) {
-            $this->valueConversion = $converter;
-        }
+        $this->columnConversion = $converter instanceof ColumnConversion ? $converter : null;
+        $this->valueConversion = $converter instanceof ValueConversion ? $converter : null;
     }
 }

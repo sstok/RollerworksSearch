@@ -76,15 +76,8 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
  */
 final class JsonInput extends AbstractInput
 {
-    /**
-     * @var StructureBuilder|null
-     */
-    private $structureBuilder;
-
-    /**
-     * @var StructureBuilder|null
-     */
-    private $orderStructureBuilder;
+    private ?StructureBuilder $structureBuilder = null;
+    private ?StructureBuilder $orderStructureBuilder = null;
 
     public function process(ProcessorConfig $config, $input): SearchCondition
     {
@@ -92,7 +85,7 @@ final class JsonInput extends AbstractInput
             throw new UnexpectedTypeException($input, 'string');
         }
 
-        $input = trim($input);
+        $input = mb_trim($input);
 
         $fieldSet = $config->getFieldSet();
 
@@ -150,7 +143,7 @@ final class JsonInput extends AbstractInput
     {
         $this->processFields($group['fields'] ?? []);
 
-        foreach ($group['groups'] ?? [] as $index => $sub) {
+        foreach ($group['groups'] ?? [] as $sub) {
             $this->structureBuilder->enterGroup($sub['logical-case'] ?? ValuesGroup::GROUP_LOGICAL_AND, '[groups][%d]');
             $this->processGroup($sub);
             $this->structureBuilder->leaveGroup();
@@ -228,7 +221,9 @@ final class JsonInput extends AbstractInput
         if ($order === []) {
             /** @var FieldConfig $field */
             foreach ($fieldSet->all() as $name => $field) {
-                if (OrderField::isOrder($name) && null !== $direction = $field->getOption('default')) {
+                $direction = $field->getOption('default');
+
+                if (OrderField::isOrder($name) && $direction !== null) {
                     $this->orderStructureBuilder->field($name, '[order][%s]');
                     $this->orderStructureBuilder->simpleValue($direction, '');
                     $this->orderStructureBuilder->endValues();
@@ -257,9 +252,7 @@ final class JsonInput extends AbstractInput
     private function assertValueArrayHasKeys($array, array $requiredKeys, string $path): void
     {
         if (! \is_array($array)) {
-            throw new InputProcessorException(implode('', $this->structureBuilder->getCurrentPath()) . $path,
-                \sprintf('Expected value-structure to be an array, got %s instead.', \gettype($array))
-            );
+            throw new InputProcessorException(implode('', $this->structureBuilder->getCurrentPath()) . $path, \sprintf('Expected value-structure to be an array, got %s instead.', \gettype($array)));
         }
 
         $missingKeys = [];
@@ -271,7 +264,8 @@ final class JsonInput extends AbstractInput
         }
 
         if ($missingKeys) {
-            throw new InputProcessorException(implode('', $this->structureBuilder->getCurrentPath()) . $path,
+            throw new InputProcessorException(
+                implode('', $this->structureBuilder->getCurrentPath()) . $path,
                 \sprintf(
                     'Expected value-structure to contain the following keys: %s. ' .
                     'But the following keys are missing: %s.',

@@ -22,39 +22,29 @@ class ValuesBag implements \Countable
 {
     private int $valuesCount = 0;
 
-    /**
-     * @var array<int, mixed>
-     */
+    /** @var array<int, mixed> */
     private array $simpleValues = [];
 
-    /**
-     * @var array<int, mixed>
-     */
+    /** @var array<int, mixed> */
     private array $simpleExcludedValues = [];
 
-    /**
-     * @var array<class-string<ValueHolder>, ValueHolder[]>
-     */
+    /** @var array<class-string<ValueHolder>, ValueHolder[]> */
     private array $values = [];
 
+    /**
+     * @param class-string<ValueHolder>|'simpleValues'|'simpleValue'|'simpleExcludedValue'|'simpleExcludedValues'|null $type
+     */
     public function count(?string $type = null): int
     {
         if ($type === null) {
             return $this->valuesCount;
         }
 
-        switch ($type) {
-            case 'simpleValues':
-            case 'simpleValue':
-                return \count($this->simpleValues);
-
-            case 'simpleExcludedValues':
-            case 'simpleExcludedValue':
-                return \count($this->simpleExcludedValues);
-
-            default:
-                return \count($this->values[$type] ?? []);
-        }
+        return match ($type) {
+            'simpleValues', 'simpleValue' => \count($this->simpleValues),
+            'simpleExcludedValues', 'simpleExcludedValue' => \count($this->simpleExcludedValues),
+            default => \count($this->values[$type] ?? []),
+        };
     }
 
     /**
@@ -132,7 +122,7 @@ class ValuesBag implements \Countable
     /**
      * @return $this
      */
-    public function addExcludedSimpleValue($value): static
+    public function addExcludedSimpleValue(mixed $value): static
     {
         $this->simpleExcludedValues[] = $value;
         ++$this->valuesCount;
@@ -187,6 +177,8 @@ class ValuesBag implements \Countable
 
     /**
      * Remove a value by type and index.
+     *
+     * @param class-string<ValueHolder> $type
      *
      * @return $this
      */

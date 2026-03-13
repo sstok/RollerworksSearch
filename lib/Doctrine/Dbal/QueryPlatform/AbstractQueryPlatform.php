@@ -28,30 +28,19 @@ use Rollerworks\Component\Search\Value\PatternMatch;
  */
 abstract class AbstractQueryPlatform
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    /** @var ArrayCollection<string, array{mixed, string|null}> */
+    private readonly ArrayCollection $parameters;
 
-    /** @var ArrayCollection<string,array> */
-    private $parameters;
+    private int $parameterIdx = -1;
 
-    /** @var int */
-    private $parameterIdx = -1;
-
-    /**
-     * @var 'mysql'|'sqlite'|'pgsql'|'oci'|'sqlsrv'|'mock'|string
-     */
-    public string $platformName;
-
-    public function __construct(Connection $connection, string $platformName)
-    {
-        $this->connection = $connection;
+    public function __construct(
+        protected Connection $connection,
+        public readonly string $platformName,
+    ) {
         $this->parameters = new ArrayCollection();
-        $this->platformName = $platformName;
     }
 
-    public function getValueAsSql($value, QueryField $mappingConfig, ConversionHints $hints): string
+    public function getValueAsSql(mixed $value, QueryField $mappingConfig, ConversionHints $hints): string
     {
         if ($mappingConfig->valueConversion !== null) {
             return $mappingConfig->valueConversion->convertValue(
@@ -64,7 +53,7 @@ abstract class AbstractQueryPlatform
         return $this->createParamReferenceFor($value, $mappingConfig->dbTypeName);
     }
 
-    public function createParamReferenceFor($value, ?string $type = null): string
+    public function createParamReferenceFor(mixed $value, ?string $type = null): string
     {
         $name = 'search_' . (++$this->parameterIdx);
         $this->parameters->set($name, [$value, $type]);
@@ -126,6 +115,9 @@ abstract class AbstractQueryPlatform
         return '%_';
     }
 
+    /**
+     * @return ArrayCollection<string, array{mixed, string|null}>
+     */
     public function getParameters(): ArrayCollection
     {
         return $this->parameters;

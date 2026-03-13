@@ -15,7 +15,9 @@ namespace Rollerworks\Component\Search\Loader;
 
 use Psr\Container\ContainerInterface;
 use Rollerworks\Component\Search\Exception\InvalidArgumentException;
-use Rollerworks\Component\Search\Input;
+use Rollerworks\Component\Search\Input\JsonInput;
+use Rollerworks\Component\Search\Input\NormStringQueryInput;
+use Rollerworks\Component\Search\Input\StringQueryInput;
 use Rollerworks\Component\Search\Input\Validator;
 use Rollerworks\Component\Search\InputProcessor;
 
@@ -26,18 +28,15 @@ use Rollerworks\Component\Search\InputProcessor;
  */
 final class InputProcessorLoader
 {
-    private $container;
-    private $serviceIds;
-
     /**
-     * @param ContainerInterface $container  A PSR-11 compatible Service locator/container
-     * @param string[]           $serviceIds Format alias to service-id mapping,
-     *                                       eg. 'json' => 'JsonInput-ClassName'
+     * @param ContainerInterface    $container  A PSR-11 compatible Service container
+     * @param array<string, string> $serviceIds Format alias to service-id mapping,
+     *                                          eg. 'json' => 'ServiceId of the container'
      */
-    public function __construct(ContainerInterface $container, array $serviceIds)
-    {
-        $this->container = $container;
-        $this->serviceIds = $serviceIds;
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private readonly array $serviceIds,
+    ) {
     }
 
     /**
@@ -48,9 +47,9 @@ final class InputProcessorLoader
         return new self(
             new ClosureContainer(
                 [
-                    'rollerworks_search.input.json' => static fn () => new Input\JsonInput($validator),
-                    'rollerworks_search.input.string_query' => static fn () => new Input\StringQueryInput($validator),
-                    'rollerworks_search.input.norm_string_query' => static fn () => new Input\NormStringQueryInput($validator),
+                    'rollerworks_search.input.json' => static fn (): JsonInput => new JsonInput($validator),
+                    'rollerworks_search.input.string_query' => static fn (): StringQueryInput => new StringQueryInput($validator),
+                    'rollerworks_search.input.norm_string_query' => static fn (): NormStringQueryInput => new NormStringQueryInput($validator),
                 ]
             ),
             [

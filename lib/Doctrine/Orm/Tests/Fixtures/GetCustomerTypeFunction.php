@@ -14,13 +14,14 @@ declare(strict_types=1);
 namespace Rollerworks\Component\Search\Doctrine\Orm\Tests\Fixtures;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\TokenType;
 
 final class GetCustomerTypeFunction extends FunctionNode
 {
-    public $stringPrimary;
+    public Node $stringPrimary;
 
     public function getSql(SqlWalker $sqlWalker): string
     {

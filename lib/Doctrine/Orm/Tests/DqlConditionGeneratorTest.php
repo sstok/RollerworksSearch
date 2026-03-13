@@ -27,6 +27,7 @@ use Rollerworks\Component\Search\Extension\Core\Type\TextType;
 use Rollerworks\Component\Search\SearchCondition;
 use Rollerworks\Component\Search\SearchConditionBuilder;
 use Rollerworks\Component\Search\SearchPrimaryCondition;
+use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceCustomer;
 use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInvoice;
 use Rollerworks\Component\Search\Value\Compare;
 use Rollerworks\Component\Search\Value\ExcludedRange;
@@ -64,12 +65,12 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $conditionGenerator = $this->getOrmFactory()->createConditionGenerator($qb, $condition);
 
         if (! $noMapping) {
-            $conditionGenerator->setDefaultEntity(self::INVOICE_CLASS, 'I');
+            $conditionGenerator->setDefaultEntity(ECommerceInvoice::class, 'I');
             $conditionGenerator->setField('id', 'id', null, null, 'smallint');
             $conditionGenerator->setField('@id', 'id');
             $conditionGenerator->setField('status', 'status');
 
-            $conditionGenerator->setDefaultEntity(self::CUSTOMER_CLASS, 'C');
+            $conditionGenerator->setDefaultEntity(ECommerceCustomer::class, 'C');
             $conditionGenerator->setField('customer', 'id');
             $conditionGenerator->setField('@customer', 'id');
             $conditionGenerator->setField('customer_name#first_name', 'firstName');
@@ -906,7 +907,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         ;
 
         $qb = $this->em->createQueryBuilder();
-        $qb->select('C')->from(self::CUSTOMER_CLASS, 'C');
+        $qb->select('C')->from(ECommerceCustomer::class, 'C');
 
         $conditionGenerator = $this->getConditionGenerator($condition, $qb);
 
@@ -1005,8 +1006,8 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $conditionGenerator->apply();
 
         $expectedDql = $mainDql . ($expectedDql ? ' ' : '') . $expectedDql;
-        $expectedDql = preg_replace('/\s+/', ' ', trim($expectedDql));
-        $actualDql = preg_replace('/\s+/', ' ', trim($qb->getDQL()));
+        $expectedDql = preg_replace('/\s+/', ' ', mb_trim($expectedDql));
+        $actualDql = preg_replace('/\s+/', ' ', mb_trim($qb->getDQL()));
 
         self::assertEquals($expectedDql, $actualDql);
         self::assertQueryParametersEquals($parameters, $qb);
@@ -1015,8 +1016,8 @@ final class DqlConditionGeneratorTest extends OrmTestCase
             $sql = $qb->getQuery()->getSQL();
 
             if ($expectedSql !== '') {
-                $expectedSql = preg_replace('/\s+/', ' ', trim($expectedSql));
-                $sql = preg_replace('/\s+/', ' ', trim($sql));
+                $expectedSql = preg_replace('/\s+/', ' ', mb_trim($expectedSql));
+                $sql = preg_replace('/\s+/', ' ', mb_trim($sql));
 
                 self::assertEquals($expectedSql, $sql);
             }

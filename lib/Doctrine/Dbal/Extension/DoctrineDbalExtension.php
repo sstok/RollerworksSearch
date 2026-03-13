@@ -14,25 +14,28 @@ declare(strict_types=1);
 namespace Rollerworks\Component\Search\Extension\Doctrine\Dbal;
 
 use Rollerworks\Component\Search\AbstractExtension;
-use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Conversion\AgeDateConversion;
-use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Conversion\MoneyValueConversion;
+use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Type\BirthdayTypeExtension;
+use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Type\ChildCountType;
+use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Type\DateTimeTypeExtension;
+use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Type\FieldTypeExtension;
+use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Type\MoneyTypeExtension;
 
 class DoctrineDbalExtension extends AbstractExtension
 {
     protected function loadTypesExtensions(): array
     {
         return [
-            new Type\FieldTypeExtension(),
-            new Type\DateTimeTypeExtension(),
-            new Type\BirthdayTypeExtension(new AgeDateConversion()),
-            new Type\MoneyTypeExtension(new MoneyValueConversion()),
+            new FieldTypeExtension(),
+            new DateTimeTypeExtension(),
+            new BirthdayTypeExtension(),
+            new MoneyTypeExtension(),
         ];
     }
 
     protected function loadTypes(): array
     {
         return [
-            new Type\ChildCountType(),
+            new ChildCountType(),
         ];
     }
 }

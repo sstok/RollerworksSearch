@@ -22,14 +22,9 @@ use Rollerworks\Component\Search\SearchCondition;
  */
 class DoctrineOrmFactory
 {
-    /**
-     * @var Cache
-     */
-    private $cacheDriver;
-
-    public function __construct(?Cache $cacheDriver = null)
-    {
-        $this->cacheDriver = $cacheDriver;
+    public function __construct(
+        private readonly ?Cache $cacheDriver = null,
+    ) {
     }
 
     /**
@@ -49,7 +44,7 @@ class DoctrineOrmFactory
      *                                    the driver supports TTL then the library may set a default value
      *                                    for it or let the driver take care of that.
      */
-    public function createCachedConditionGenerator(QueryBuilder $query, SearchCondition $searchCondition, $ttl = null): ConditionGenerator
+    public function createCachedConditionGenerator(QueryBuilder $query, SearchCondition $searchCondition, \DateInterval | int | null $ttl = null): ConditionGenerator
     {
         if ($this->cacheDriver === null) {
             return $this->createConditionGenerator($query, $searchCondition);

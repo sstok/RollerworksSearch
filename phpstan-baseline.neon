@@ -217,12 +217,6 @@ parameters:
 			path: lib/Doctrine/Orm/Tests/OrmTestCase.php
 
 		-
-			message: '#^Method Rollerworks\\Component\\Search\\Elasticsearch\\FieldMapping\:\:parseProperty\(\) should return array\<string\> but returns array\<string, array\<string, array\<string, array\<string, array\<string, bool\|string\>\|bool\|string\>\|bool\|string\>\|bool\|string\>\|string\|false\|null\>\.$#'
-			identifier: return.type
-			count: 1
-			path: lib/Elasticsearch/FieldMapping.php
-
-		-
 			message: '#^Variable \$nestedBool might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2
@@ -245,12 +239,6 @@ parameters:
 			identifier: arguments.count
 			count: 1
 			path: lib/Symfony/SearchBundle/Tests/Functional/ApiPlatformTest.php
-
-		-
-			message: '#^Call to method Rollerworks\\Component\\Search\\SearchConditionBuilder\:\:end\(\) on a separate line has no effect\.$#'
-			identifier: method.resultUnused
-			count: 3
-			path: lib/Symfony/SearchBundle/Tests/SearchConditionBuilderTest.php
 
 		-
 			message: '#^Property Rollerworks\\Component\\Search\\Extension\\Symfony\\Validator\\InputValidator\:\:\$errorList is never read, only written\.$#'

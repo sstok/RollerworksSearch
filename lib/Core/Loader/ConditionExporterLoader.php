@@ -16,7 +16,9 @@ namespace Rollerworks\Component\Search\Loader;
 use Psr\Container\ContainerInterface;
 use Rollerworks\Component\Search\ConditionExporter;
 use Rollerworks\Component\Search\Exception\InvalidArgumentException;
-use Rollerworks\Component\Search\Exporter;
+use Rollerworks\Component\Search\Exporter\JsonExporter;
+use Rollerworks\Component\Search\Exporter\NormStringQueryExporter;
+use Rollerworks\Component\Search\Exporter\StringQueryExporter;
 
 /**
  * ConditionExporterLoader provides lazy loading of ConditionExporters.
@@ -25,32 +27,29 @@ use Rollerworks\Component\Search\Exporter;
  */
 final class ConditionExporterLoader
 {
-    private $container;
-    private $serviceIds = [];
-
     /**
-     * @param ContainerInterface $container  A PSR-11 compatible Service locator/container
-     * @param array              $serviceIds Format alias to service-id mapping,
-     *                                       eg. 'json' => 'JsonExporter-ClassName'
+     * @param ContainerInterface    $container  A PSR-11 compatible Service locator/container
+     * @param array<string, string> $serviceIds Format alias to service-id mapping,
+     *                                          eg. 'json' => 'service-id'
      */
-    public function __construct(ContainerInterface $container, array $serviceIds)
-    {
-        $this->container = $container;
-        $this->serviceIds = $serviceIds;
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private readonly array $serviceIds,
+    ) {
     }
 
     /**
-     * Create a new ConditionExporterLoader with the build-in ConditionExporters
-     * loadable.
+     * Create a new ConditionExporterLoader with the build-in
+     * ConditionExporter loadable.
      */
     public static function create(): self
     {
         return new self(
             new ClosureContainer(
                 [
-                    'rollerworks_search.condition_exporter.json' => static fn () => new Exporter\JsonExporter(),
-                    'rollerworks_search.condition_exporter.string_query' => static fn () => new Exporter\StringQueryExporter(),
-                    'rollerworks_search.condition_exporter.norm_string_query' => static fn () => new Exporter\NormStringQueryExporter(),
+                    'rollerworks_search.condition_exporter.json' => static fn (): JsonExporter => new JsonExporter(),
+                    'rollerworks_search.condition_exporter.string_query' => static fn (): StringQueryExporter => new StringQueryExporter(),
+                    'rollerworks_search.condition_exporter.norm_string_query' => static fn (): NormStringQueryExporter => new NormStringQueryExporter(),
                 ]
             ),
             [

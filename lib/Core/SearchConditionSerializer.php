@@ -19,17 +19,15 @@ use Rollerworks\Component\Search\Exception\InvalidArgumentException;
  * SearchConditionSerializer, serializes a search condition for persistent storage.
  *
  * In practice this serializes the root ValuesGroup and of the condition
- * and bundles it with the FieldSet-name for future unserializing.
+ * and bundles it with the FieldSet-name for further unserializing.
  *
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
  */
 class SearchConditionSerializer
 {
-    private $searchFactory;
-
-    public function __construct(SearchFactory $searchFactory)
-    {
-        $this->searchFactory = $searchFactory;
+    public function __construct(
+        private readonly SearchFactory $searchFactory,
+    ) {
     }
 
     /**
@@ -39,9 +37,9 @@ class SearchConditionSerializer
      * This is not done already because storing a serialized SearchCondition
      * in a php session would serialize the serialized result again.
      *
-     * Caution: The FieldSet must be loadable from the factory.
+     * Caution: The FieldSet must be loadable from the SearchFactory.
      *
-     * @return array [FieldSet-name, serialized ValuesGroup object]
+     * @return array{0: string, 1: string} ['FieldSet-name', 'serialized ValuesGroup object']
      */
     public function serialize(SearchCondition $searchCondition): array
     {
@@ -53,7 +51,7 @@ class SearchConditionSerializer
     /**
      * Unserialize a serialized SearchCondition.
      *
-     * @param array $searchCondition [FieldSet-name, serialized ValuesGroup object]
+     * @param array{0: string, 1: string} $searchCondition [FieldSet-name, serialized ValuesGroup object]
      *
      * @throws InvalidArgumentException when serialized SearchCondition is invalid
      *                                  (invalid structure or failed to unserialize)
@@ -62,17 +60,20 @@ class SearchConditionSerializer
     {
         if (\count($searchCondition) !== 2 || ! isset($searchCondition[0], $searchCondition[1])) {
             throw new InvalidArgumentException(
-                'Serialized search condition must be exactly two values [FieldSet-name, serialized ValuesGroup].'
+                'Serialized search condition must be exactly two values ["FieldSet-name", "serialized ValuesGroup"].'
             );
         }
 
         $fieldSet = $this->searchFactory->createFieldSet($searchCondition[0]);
 
-        // FIXME This needs safe serialzing with error handling
-        if (false === $group = unserialize($searchCondition[1])) {
-            throw new InvalidArgumentException('Unable to unserialize invalid value.');
-        }
+        set_error_handler(static function (int $errNo, string $errstr, string $errFile, int $errLine): void {
+            throw new InvalidArgumentException('Unable to unserialize invalid value.', $errNo, new \ErrorException($errstr, $errNo, $errNo, $errFile, $errLine));
+        });
 
-        return new SearchCondition($fieldSet, $group);
+        try {
+            return new SearchCondition($fieldSet, unserialize($searchCondition[1], ['allowed_classes' => true]));
+        } finally {
+            restore_error_handler();
+        }
     }
 }

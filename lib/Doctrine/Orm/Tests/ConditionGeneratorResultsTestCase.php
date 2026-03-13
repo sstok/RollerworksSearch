@@ -26,6 +26,9 @@ use Rollerworks\Component\Search\Input\ProcessorConfig;
 use Rollerworks\Component\Search\Input\StringQueryInput;
 use Rollerworks\Component\Search\SearchPrimaryCondition;
 use Rollerworks\Component\Search\Tests\Doctrine\Dbal\SchemaRecord;
+use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceCustomer;
+use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInvoice;
+use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInvoiceRow;
 
 /**
  * Ensures the expected results are actually found.
@@ -47,10 +50,7 @@ use Rollerworks\Component\Search\Tests\Doctrine\Dbal\SchemaRecord;
  */
 abstract class ConditionGeneratorResultsTestCase extends OrmTestCase
 {
-    /**
-     * @var StringQueryInput
-     */
-    private $inputProcessor;
+    private StringQueryInput $inputProcessor;
 
     protected function setUp(): void
     {
@@ -64,7 +64,7 @@ abstract class ConditionGeneratorResultsTestCase extends OrmTestCase
      */
     protected function getDbRecords()
     {
-        $date = static fn (string $input) => new \DateTimeImmutable($input, new \DateTimeZone('UTC'));
+        $date = static fn (string $input): \DateTimeImmutable => new \DateTimeImmutable($input, new \DateTimeZone('UTC'));
 
         return [
             SchemaRecord::create(
@@ -152,7 +152,7 @@ abstract class ConditionGeneratorResultsTestCase extends OrmTestCase
 
     protected function configureConditionGenerator(FieldConfigBuilder $conditionGenerator): void
     {
-        $conditionGenerator->setDefaultEntity(self::INVOICE_CLASS, 'I');
+        $conditionGenerator->setDefaultEntity(ECommerceInvoice::class, 'I');
         $conditionGenerator->setField('id', 'id');
         $conditionGenerator->setField('@id', 'id');
         $conditionGenerator->setField('label', 'label');
@@ -160,13 +160,13 @@ abstract class ConditionGeneratorResultsTestCase extends OrmTestCase
         $conditionGenerator->setField('status', 'status');
         $conditionGenerator->setField('total', 'total');
 
-        $conditionGenerator->setDefaultEntity(Fixtures\Entity\ECommerceInvoiceRow::class, 'R');
+        $conditionGenerator->setDefaultEntity(ECommerceInvoiceRow::class, 'R');
         $conditionGenerator->setField('row-label', 'label');
         $conditionGenerator->setField('row-price', 'price');
         $conditionGenerator->setField('row-quantity', 'quantity');
         $conditionGenerator->setField('row-total', 'total');
 
-        $conditionGenerator->setDefaultEntity(self::CUSTOMER_CLASS, 'C');
+        $conditionGenerator->setDefaultEntity(ECommerceCustomer::class, 'C');
         $conditionGenerator->setField('customer', 'id');
         $conditionGenerator->setField('customer-first-name', 'firstName');
         $conditionGenerator->setField('customer-name#first_name', 'firstName');

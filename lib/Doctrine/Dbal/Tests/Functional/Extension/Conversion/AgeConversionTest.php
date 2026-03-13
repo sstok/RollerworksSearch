@@ -39,7 +39,7 @@ final class AgeConversionTest extends FunctionalDbalTestCase
     /**
      * @return SchemaRecord[]
      */
-    protected function getDbRecords()
+    protected function getDbRecords(): array
     {
         return [
             SchemaRecord::create('site_user', ['id' => 'integer', 'birthday' => 'date_immutable'])

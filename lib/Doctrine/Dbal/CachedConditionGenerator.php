@@ -32,14 +32,15 @@ use Rollerworks\Component\Search\SearchCondition;
  */
 final class CachedConditionGenerator extends AbstractCachedConditionGenerator implements ConditionGenerator
 {
-    private QueryBuilder $qb;
-    private FieldConfigurationSet $fieldsConfig;
+    private readonly FieldConfigurationSet $fieldsConfig;
 
-    public function __construct(QueryBuilder $queryBuilder, SearchCondition $searchCondition, Cache $cacheDriver, \DateInterval|int|null $ttl = null)
-    {
+    public function __construct(
+        private readonly QueryBuilder $qb,
+        SearchCondition $searchCondition,
+        Cache $cacheDriver,
+        \DateInterval | int | null $ttl = null,
+    ) {
         parent::__construct($cacheDriver, $searchCondition, $ttl);
-
-        $this->qb = $queryBuilder;
         $this->fieldsConfig = new FieldConfigurationSet($searchCondition->getFieldSet());
     }
 

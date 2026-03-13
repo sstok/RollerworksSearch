@@ -21,15 +21,12 @@ use function Symfony\Component\String\u;
 
 final class DateIntervalTransformer implements DataTransformer
 {
-    /** @var string */
-    private $fromLocale;
+    private string $toLocale;
 
-    /** @var string */
-    private $toLocale;
-
-    public function __construct(string $fromLocale, ?string $toLocale = null)
-    {
-        $this->fromLocale = $fromLocale;
+    public function __construct(
+        private readonly string $fromLocale,
+        ?string $toLocale = null,
+    ) {
         $this->toLocale = $toLocale ?? $fromLocale;
     }
 
@@ -59,7 +56,7 @@ final class DateIntervalTransformer implements DataTransformer
     /**
      * @param string $value
      */
-    public function reverseTransform($value): ?CarbonInterval
+    public function reverseTransform(mixed $value): mixed
     {
         if (! \is_scalar($value)) {
             throw new TransformationFailedException('Expected a scalar.');
@@ -97,7 +94,7 @@ final class DateIntervalTransformer implements DataTransformer
         $messages = $translations[$this->fromLocale];
 
         foreach (['year', 'month', 'week', 'day', 'hour', 'minute', 'second'] as $item) {
-            foreach (explode('|', $messages[$item]) as $idx => $messagePart) {
+            foreach (explode('|', (string) $messages[$item]) as $idx => $messagePart) {
                 if (preg_match('/[:%](count|time)/', $messagePart)) {
                     continue;
                 }
@@ -123,6 +120,6 @@ final class DateIntervalTransformer implements DataTransformer
         $word = strtr($word, ['’' => "'"]);
         $word = preg_replace('/({\d+(,(\d+|Inf))?}|[\[\]]\d+(,(\d+|Inf))?[\[\]])/', '', $word);
 
-        return trim($word);
+        return mb_trim((string) $word);
     }
 }

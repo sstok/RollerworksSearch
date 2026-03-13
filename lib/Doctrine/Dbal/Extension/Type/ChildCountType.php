@@ -25,7 +25,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ChildCountType extends AbstractFieldType
 {
-    protected $conversion;
+    protected ChildCountConversion $conversion;
 
     public function __construct()
     {

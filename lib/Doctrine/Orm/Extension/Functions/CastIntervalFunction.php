@@ -24,8 +24,8 @@ use Rollerworks\Component\Search\Extension\Doctrine\Dbal\Conversion\DateInterval
  */
 final class CastIntervalFunction extends PlatformSpecificFunction
 {
-    public $intervalExpression;
-    public $inverted;
+    public string $intervalExpression;
+    public bool $inverted;
 
     public function getSql(SqlWalker $sqlWalker): string
     {

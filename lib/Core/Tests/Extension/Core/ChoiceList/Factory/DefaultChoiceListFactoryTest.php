@@ -30,23 +30,19 @@ use Rollerworks\Component\Search\Extension\Core\ChoiceList\View\ChoiceView;
  */
 final class DefaultChoiceListFactoryTest extends TestCase
 {
-    private $obj1;
-    private $obj2;
-    private $obj3;
-    private $obj4;
-    private $list;
+    private object $obj1;
+    private object $obj2;
+    private object $obj3;
+    private object $obj4;
+    private ArrayChoiceList $list;
+    private DefaultChoiceListFactory $factory;
 
-    /**
-     * @var DefaultChoiceListFactory|null
-     */
-    private $factory;
-
-    public function getValue($object)
+    public function getValue(object $object): mixed
     {
         return $object->value;
     }
 
-    public function getScalarValue($choice)
+    public function getScalarValue(string $choice): string
     {
         switch ($choice) {
             case 'a':
@@ -60,35 +56,38 @@ final class DefaultChoiceListFactoryTest extends TestCase
 
             case 'd':
                 return '2';
+
+            default:
+                throw new \InvalidArgumentException(sprintf('Unexpected choice "%s".', $choice));
         }
     }
 
-    public function getLabel($object): string
+    public function getLabel(object $object): string
     {
         return $object->label;
     }
 
-    public function getFormIndex($object)
+    public function getFormIndex(object $object)
     {
         return $object->index;
     }
 
-    public function isPreferred($object): bool
+    public function isPreferred(object $object): bool
     {
         return $this->obj2 === $object || $this->obj3 === $object;
     }
 
-    public function getAttr($object)
+    public function getAttr(object $object)
     {
         return $object->attr;
     }
 
-    public function getGroup($object): string
+    public function getGroup(object $object): string
     {
         return $this->obj1 === $object || $this->obj2 === $object ? 'Group 1' : 'Group 2';
     }
 
-    public function getGroupAsObject($object): DefaultChoiceListFactoryTest_Castable
+    public function getGroupAsObject(object $object): DefaultChoiceListFactoryTest_Castable
     {
         return $this->obj1 === $object || $this->obj2 === $object
             ? new DefaultChoiceListFactoryTest_Castable('Group 1')
@@ -178,7 +177,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
     {
         $list = $this->factory->createListFromChoices(
             ['A' => $this->obj1, 'B' => $this->obj2, 'C' => $this->obj3, 'D' => $this->obj4],
-            [$this, 'getValue']
+            $this->getValue(...)
         );
 
         $this->assertObjectListWithCustomValues($list);
@@ -229,7 +228,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
                 'Group 1' => ['A' => $this->obj1, 'B' => $this->obj2],
                 'Group 2' => ['C' => $this->obj3, 'D' => $this->obj4],
             ],
-            [$this, 'getValue']
+            $this->getValue(...)
         );
 
         $this->assertObjectListWithCustomValues($list);
@@ -325,7 +324,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
     {
         $view = $this->factory->createView(
             $this->list,
-            [$this, 'isPreferred']
+            $this->isPreferred(...)
         );
 
         $this->assertFlatView($view);
@@ -339,7 +338,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
 
         $view = $this->factory->createView(
             $this->list,
-            static fn ($object) => $obj2 === $object || $obj3 === $object
+            static fn ($object): bool => $obj2 === $object || $obj3 === $object
         );
 
         $this->assertFlatView($view);
@@ -350,7 +349,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
     {
         $view = $this->factory->createView(
             $this->list,
-            static fn ($object, $key) => $key === 'B' || $key === 'C'
+            static fn ($object, $key): bool => $key === 'B' || $key === 'C'
         );
 
         $this->assertFlatView($view);
@@ -361,7 +360,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
     {
         $view = $this->factory->createView(
             $this->list,
-            static fn ($object, $key, $value) => $value === '1' || $value === '2'
+            static fn ($object, $key, $value): bool => $value === '1' || $value === '2'
         );
 
         $this->assertFlatView($view);
@@ -373,7 +372,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
         $view = $this->factory->createView(
             $this->list,
             [$this->obj2, $this->obj3],
-            [$this, 'getLabel']
+            $this->getLabel(...)
         );
 
         $this->assertFlatView($view);
@@ -432,7 +431,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
             $this->list,
             [$this->obj2, $this->obj3],
             null, // label
-            [$this, 'getFormIndex']
+            $this->getFormIndex(...)
         );
 
         $this->assertFlatViewWithCustomIndices($view);
@@ -536,7 +535,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
             [$this->obj2, $this->obj3],
             null, // label
             null, // index
-            [$this, 'getGroup']
+            $this->getGroup(...)
         );
 
         $this->assertGroupedView($view);
@@ -550,7 +549,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
             [$this->obj2, $this->obj3],
             null, // label
             null, // index
-            [$this, 'getGroupAsObject']
+            $this->getGroupAsObject(...)
         );
 
         $this->assertGroupedView($view);
@@ -567,7 +566,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
             [$this->obj2, $this->obj3],
             null, // label
             null, // index
-            static fn ($object) => $obj1 === $object || $obj2 === $object ? 'Group 1' : 'Group 2'
+            static fn ($object): string => $obj1 === $object || $obj2 === $object ? 'Group 1' : 'Group 2'
         );
 
         $this->assertGroupedView($view);
@@ -581,7 +580,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
             [$this->obj2, $this->obj3],
             null, // label
             null, // index
-            static fn ($object, $key) => $key === 'A' || $key === 'B' ? 'Group 1' : 'Group 2'
+            static fn ($object, $key): string => $key === 'A' || $key === 'B' ? 'Group 1' : 'Group 2'
         );
 
         $this->assertGroupedView($view);
@@ -595,7 +594,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
             [$this->obj2, $this->obj3],
             null, // label
             null, // index
-            static fn ($object, $key, $value) => $value === '0' || $value === '1' ? 'Group 1' : 'Group 2'
+            static fn ($object, $key, $value): string => $value === '0' || $value === '1' ? 'Group 1' : 'Group 2'
         );
 
         $this->assertGroupedView($view);
@@ -643,7 +642,7 @@ final class DefaultChoiceListFactoryTest extends TestCase
             null, // label
             null, // index
             null, // group
-            [$this, 'getAttr']
+            $this->getAttr(...)
         );
 
         $this->assertFlatViewWithAttr($view);
@@ -673,14 +672,10 @@ final class DefaultChoiceListFactoryTest extends TestCase
             null, // label
             null, // index
             null, // group
-            static function ($object, $key) {
-                switch ($key) {
-                    case 'B': return ['attr1' => 'value1'];
-
-                    case 'C': return ['attr2' => 'value2'];
-
-                    default: return [];
-                }
+            static fn ($object, $key): array => match ($key) {
+                'B' => ['attr1' => 'value1'],
+                'C' => ['attr2' => 'value2'],
+                default => [],
             }
         );
 
@@ -696,14 +691,10 @@ final class DefaultChoiceListFactoryTest extends TestCase
             null, // label
             null, // index
             null, // group
-            static function ($object, $key, $value) {
-                switch ($value) {
-                    case '1': return ['attr1' => 'value1'];
-
-                    case '2': return ['attr2' => 'value2'];
-
-                    default: return [];
-                }
+            static fn ($object, $key, $value): array => match ($value) {
+                '1' => ['attr1' => 'value1'],
+                '2' => ['attr2' => 'value2'],
+                default => [],
             }
         );
 
@@ -870,18 +861,18 @@ final class DefaultChoiceListFactoryTest extends TestCase
     }
 }
 
-/** @ignore */
-final class DefaultChoiceListFactoryTest_Castable
+/**
+ * @ignore
+ */
+final class DefaultChoiceListFactoryTest_Castable implements \Stringable
 {
-    private $property;
-
-    public function __construct($property)
-    {
-        $this->property = $property;
+    public function __construct(
+        private mixed $property,
+    ) {
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->property;
+        return (string) $this->property;
     }
 }

@@ -17,7 +17,6 @@ use Doctrine\ORM\QueryBuilder;
 use Psr\SimpleCache\CacheInterface;
 use Rollerworks\Component\Search\Doctrine\Orm\CachedDqlConditionGenerator;
 use Rollerworks\Component\Search\Doctrine\Orm\DoctrineOrmFactory;
-use Rollerworks\Component\Search\Doctrine\Orm\QueryBuilderConditionGenerator;
 use Rollerworks\Component\Search\GenericFieldSet;
 use Rollerworks\Component\Search\SearchCondition;
 use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceInvoice;
@@ -30,10 +29,7 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
  */
 final class DoctrineOrmFactoryTest extends OrmTestCase
 {
-    /**
-     * @var DoctrineOrmFactory
-     */
-    protected $factory;
+    protected DoctrineOrmFactory $factory;
 
     /** @test */
     public function create_condition_generator(): void
@@ -42,7 +38,7 @@ final class DoctrineOrmFactoryTest extends OrmTestCase
         $condition = new SearchCondition(new GenericFieldSet([]), new ValuesGroup());
 
         $conditionGenerator = $this->factory->createConditionGenerator($qb, $condition);
-        self::assertInstanceOf(QueryBuilderConditionGenerator::class, $conditionGenerator);
+        self::assertSame($qb, $conditionGenerator->getQueryBuilder());
     }
 
     /** @test */

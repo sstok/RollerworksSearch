@@ -25,34 +25,27 @@ namespace Rollerworks\Component\Search\Extension\Core\ChoiceList;
  */
 class ArrayChoiceList implements ChoiceList
 {
-    /**
-     * @var array<array-key, string>
-     */
-    protected $choices;
+    /** @var array<array-key, string> */
+    protected array $choices;
 
     /**
      * The values indexed by the original keys.
      *
      * @var array<array-key, string>
      */
-    protected $structuredValues;
+    protected array $structuredValues;
 
-    /**
-     * @var array<array-key, string>
-     */
-    protected $originalKeys;
+    /** @var array<array-key, string> */
+    protected array $originalKeys;
 
     /**
      * The callback for creating the value for a choice.
      *
      * @var callable|null
      */
-    protected $valueCallback;
+    protected mixed $valueCallback = null;
 
-    /**
-     * @var bool
-     */
-    protected $valuesAreConstant;
+    protected bool $valuesAreConstant;
 
     /**
      * The given choice array must have the same array keys as the value array.
@@ -63,14 +56,14 @@ class ArrayChoiceList implements ChoiceList
      *                                    incrementing integers are used as
      *                                    values
      */
-    public function __construct($choices, ?callable $value = null)
+    public function __construct(array | \Traversable $choices, ?callable $value = null)
     {
         if ($choices instanceof \Traversable) {
             $choices = iterator_to_array($choices);
         }
 
         if ($value === null && $this->castableToString($choices)) {
-            $value = static fn ($choice) => $choice === false ? '0' : (string) $choice;
+            $value = static fn ($choice): string => $choice === false ? '0' : (string) $choice;
         }
 
         if ($value !== null) {
@@ -103,7 +96,7 @@ class ArrayChoiceList implements ChoiceList
 
     public function getValues(): array
     {
-        return array_map('strval', array_keys($this->choices));
+        return array_map(strval(...), array_keys($this->choices));
     }
 
     public function getStructuredValues(): array
@@ -138,7 +131,7 @@ class ArrayChoiceList implements ChoiceList
             $givenValues = [];
 
             foreach ($choices as $i => $givenChoice) {
-                $givenValues[$i] = (string) \call_user_func($this->valueCallback, $givenChoice);
+                $givenValues[$i] = (string) ($this->valueCallback)($givenChoice);
             }
 
             return array_intersect($givenValues, array_keys($this->choices));
@@ -189,7 +182,7 @@ class ArrayChoiceList implements ChoiceList
                 continue;
             }
 
-            $choiceValue = (string) \call_user_func($value, $choice);
+            $choiceValue = (string) $value($choice);
             $choicesByValues[$choiceValue] = $choice;
             $keysByValues[$choiceValue] = $key;
             $structuredValues[$key] = $choiceValue;

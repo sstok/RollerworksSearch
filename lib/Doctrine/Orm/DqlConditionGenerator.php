@@ -15,6 +15,11 @@ namespace Rollerworks\Component\Search\Doctrine\Orm;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\OraclePlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\DBAL\Platforms\SQLitePlatform;
+use Doctrine\DBAL\Platforms\SQLServerPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Rollerworks\Component\Search\Doctrine\Dbal\Query\QueryGenerator;
@@ -22,6 +27,7 @@ use Rollerworks\Component\Search\Doctrine\Orm\QueryPlatform\DqlQueryPlatform;
 use Rollerworks\Component\Search\Exception\BadMethodCallException;
 use Rollerworks\Component\Search\SearchCondition;
 use Rollerworks\Component\Search\SearchOrder;
+use Rollerworks\Component\Search\Tests\Doctrine\Dbal\Mocks\DatabasePlatformMock;
 
 /**
  * SearchCondition Doctrine ORM DQL ConditionGenerator.
@@ -33,36 +39,16 @@ use Rollerworks\Component\Search\SearchOrder;
  */
 final class DqlConditionGenerator
 {
-    /**
-     * @var SearchCondition
-     */
-    private $searchCondition;
+    private string $whereClause;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    /** @var ArrayCollection<string, array{mixed, string|null}> */
+    private ArrayCollection $parameters;
 
-    /**
-     * @var string
-     */
-    private $whereClause;
-
-    /**
-     * @var FieldConfigBuilder
-     */
-    private $fieldsConfig;
-
-    /**
-     * @var ArrayCollection|null
-     */
-    private $parameters;
-
-    public function __construct(EntityManagerInterface $entityManager, SearchCondition $searchCondition, FieldConfigBuilder $configBuilder)
-    {
-        $this->entityManager = $entityManager;
-        $this->searchCondition = $searchCondition;
-        $this->fieldsConfig = $configBuilder;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SearchCondition $searchCondition,
+        private readonly FieldConfigBuilder $fieldsConfig,
+    ) {
     }
 
     public function getWhereClause(): string
@@ -78,6 +64,9 @@ final class DqlConditionGenerator
         return $this->whereClause;
     }
 
+    /**
+     * @return ArrayCollection<string, array{mixed, string|null}>
+     */
     public function getParameters(): ArrayCollection
     {
         if (! isset($this->parameters)) {
@@ -113,12 +102,12 @@ final class DqlConditionGenerator
         $platform = $connection->getDatabasePlatform();
 
         return match (true) {
-            $platform instanceof \Doctrine\DBAL\Platforms\AbstractMySQLPlatform => 'mysql',
-            $platform instanceof \Doctrine\DBAL\Platforms\SQLitePlatform => 'sqlite',
-            $platform instanceof \Doctrine\DBAL\Platforms\PostgreSQLPlatform => 'pgsql',
-            $platform instanceof \Doctrine\DBAL\Platforms\OraclePlatform => 'oci',
-            $platform instanceof \Doctrine\DBAL\Platforms\SQLServerPlatform => 'sqlsrv',
-            $platform instanceof \Rollerworks\Component\Search\Tests\Doctrine\Dbal\Mocks\DatabasePlatformMock => 'mock',
+            $platform instanceof AbstractMySQLPlatform => 'mysql',
+            $platform instanceof SQLitePlatform => 'sqlite',
+            $platform instanceof PostgreSQLPlatform => 'pgsql',
+            $platform instanceof OraclePlatform => 'oci',
+            $platform instanceof SQLServerPlatform => 'sqlsrv',
+            $platform instanceof DatabasePlatformMock => 'mock',
             default => $platform::class,
         };
     }

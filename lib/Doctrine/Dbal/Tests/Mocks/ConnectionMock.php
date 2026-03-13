@@ -45,7 +45,7 @@ class ConnectionMock extends Connection
     /**
      * @override
      */
-    public function insert(string $table, array $data, array $types = []): int|string
+    public function insert(string $table, array $data, array $types = []): int | string
     {
         $this->_inserts[$table][] = $data;
 
@@ -57,7 +57,7 @@ class ConnectionMock extends Connection
      *
      * @param mixed|null $seqName
      */
-    public function lastInsertId($seqName = null): int|string
+    public function lastInsertId($seqName = null): int | string
     {
         return $this->_lastInsertId;
     }

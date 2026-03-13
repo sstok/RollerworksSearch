@@ -28,57 +28,20 @@ use Rollerworks\Component\Search\Field\FieldConfig;
  */
 class QueryField
 {
-    /**
-     * @var string
-     */
-    public $mappingName;
+    public readonly DbType $dbType;
+    public readonly string $dbTypeName;
+    public readonly string $column;
+    public ?object $columnConversion;
+    public ?object $valueConversion;
+    public readonly string $tableColumn;
 
-    /**
-     * @var FieldConfig
-     */
-    public $fieldConfig;
-
-    /**
-     * @var DbType
-     */
-    public $dbType;
-
-    /**
-     * @var string
-     */
-    public $dbTypeName;
-
-    /**
-     * @var string
-     */
-    public $column;
-
-    /**
-     * @var ColumnConversion|null
-     */
-    public $columnConversion;
-
-    /**
-     * @var ValueConversion|null
-     */
-    public $valueConversion;
-
-    /**
-     * @var string
-     */
-    public $alias;
-
-    /**
-     * @var string
-     */
-    public $tableColumn;
-
-    public function __construct(string $mappingName, FieldConfig $fieldConfig, string $dbType, string $column, ?string $alias = null)
-    {
-        $this->mappingName = $mappingName;
-        $this->fieldConfig = $fieldConfig;
-
-        $this->alias = $alias;
+    public function __construct(
+        public string $mappingName,
+        public FieldConfig $fieldConfig,
+        string $dbType,
+        string $column,
+        public ?string $alias = null,
+    ) {
         $this->tableColumn = $column;
         $this->column = ($alias ? $alias . '.' : '') . $column;
         $this->dbType = DbType::getType($dbType);
@@ -87,6 +50,9 @@ class QueryField
         $this->initConversions($fieldConfig);
     }
 
+    /**
+     * @return array{mapping_name: string, field: string, db_type: string}
+     */
     public function __serialize(): array
     {
         return [
@@ -96,6 +62,9 @@ class QueryField
         ];
     }
 
+    /**
+     * @param mixed[] $data
+     */
     public function __unserialize(array $data): void
     {
         // noop
@@ -109,12 +78,7 @@ class QueryField
             $converter = $converter();
         }
 
-        if ($converter instanceof ColumnConversion) {
-            $this->columnConversion = $converter;
-        }
-
-        if ($converter instanceof ValueConversion) {
-            $this->valueConversion = $converter;
-        }
+        $this->columnConversion = $converter instanceof ColumnConversion ? $converter : null;
+        $this->valueConversion = $converter instanceof ValueConversion ? $converter : null;
     }
 }
