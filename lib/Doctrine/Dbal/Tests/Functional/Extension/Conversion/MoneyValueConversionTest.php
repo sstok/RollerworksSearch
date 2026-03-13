@@ -77,7 +77,9 @@ final class MoneyValueConversionTest extends FunctionalDbalTestCase
         return $build ? $fieldSet->getFieldSet('product') : $fieldSet;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_numeric_column(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -91,7 +93,9 @@ final class MoneyValueConversionTest extends FunctionalDbalTestCase
         $this->assertRecordsAreFound($condition, [3, 4]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_varchar_column(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -105,7 +109,9 @@ final class MoneyValueConversionTest extends FunctionalDbalTestCase
         $this->assertRecordsAreFound($condition, [1, 2]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_varchar_column_and_range(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())

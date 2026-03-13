@@ -21,15 +21,14 @@ $config = new PhpCsFixer\Config();
 $config
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PhpCsFixer' => true,
-        '@PhpCsFixer:risky' => true,
+        '@DoctrineAnnotation' => true,
+        '@PER-CS2x0' => true,
+        '@PER-CS2x0:risky' => true,
+        '@PHP8x1Migration' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PHP80Migration' => true,
-        '@PHP80Migration:risky' => true,
-        '@PHPUnit84Migration:risky' => true,
-        '@DoctrineAnnotation' => true,
-        'blank_line_between_import_groups' => false,
+        '@PHPUnit8x4Migration:risky' => true,
+        'attribute_empty_parentheses' => true, // By PER2.0
         'blank_line_before_statement' => [
             'statements' => [
                 'break',
@@ -52,37 +51,52 @@ $config
                 'throw',
                 'try',
                 'while',
+                'yield_from',
             ],
         ],
+        'blank_line_between_import_groups' => false, // Too much noise
         'comment_to_phpdoc' => ['ignored_tags' => ['codeCoverageIgnoreStart', 'codeCoverageIgnoreEnd']],
-        'concat_space' => ['spacing' => 'one'],
-        'doctrine_annotation_array_assignment' => ['operator' => '='],
-        'general_phpdoc_annotation_remove' => ['annotations' => [/*'author', */'since', 'package', 'subpackage']],
-        'header_comment' => ['header' => $header],
-        'list_syntax' => ['syntax' => 'short'],
+        'concat_space' => ['spacing' => 'one'], // Clarity for concatenations
+        'class_attributes_separation' => [
+            'elements' => [ // Keep spaces to a minimum
+                'const' => 'none',
+                'method' => 'one',
+                'property' => 'none',
+                'trait_import' => 'none',
+                'case' => 'one'
+            ],
+        ],
+        'general_phpdoc_annotation_remove' => ['annotations' => ['since', 'package', 'subpackage', 'date']], // Keep author for borrowed code
+        //'header_comment' => ['header' => $header], // Needs configuring per project
         'mb_str_functions' => true,
-        'method_argument_space' => ['on_multiline' => 'ignore'],
-        'method_chaining_indentation' => false,
-        'no_extra_blank_lines' => ['tokens' => ['extra', 'use_trait']],
-        'no_superfluous_phpdoc_tags' => ['remove_inheritdoc' => true],
+        'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline', 'attribute_placement' => 'standalone', 'after_heredoc' => true],
+        'method_chaining_indentation' => false, // Too fragile for general usage
+        'multiline_promoted_properties' => true, // By PER2.0
         'not_operator_with_successor_space' => true,
-        'ordered_class_elements' => false,
+        'phpdoc_line_span' => ['property' => 'single', 'const' => 'single'],
+        'phpdoc_param_order' => true,
+        'phpdoc_tag_casing' => true,
+        'regular_callable_call' => true,
+        'ordered_class_elements' => false, // Use the depth-first ordering approach
         'ordered_imports' => [
             'imports_order' => ['const', 'class', 'function'],
         ],
-        'php_unit_data_provider_name' => false,
-        'php_unit_data_provider_return_type' => false, // XXX Too much work for now, InputTests must be updated
-        'php_unit_method_casing' => ['case' => 'snake_case'],
-        'php_unit_strict' => false,
+        'php_unit_internal_class' => true,
+        'php_unit_method_casing' => ['case' => 'snake_case'], // it_[does]_[something]
+        'php_unit_strict' => false, // Cannot do this globally
         'php_unit_test_annotation' => ['style' => 'annotation'],
+
+        'php_unit_test_case_static_method_calls' => ['call_type' => 'self'], // Temporary
         'php_unit_test_class_requires_covers' => false,
-        'phpdoc_to_comment' => false,
-        'phpdoc_var_without_name' => false,
-        'self_static_accessor' => true,
-        'single_line_throw' => false,
-        'static_lambda' => true,
-        'strict_comparison' => false,
-        'yoda_style' => ['equal' => false, 'identical' => false],
+
+
+        'phpdoc_to_comment' => false, // PHPStan needs these
+        'phpdoc_var_without_name' => false, // PHPStan needs these
+        'single_line_throw' => false, // Long messages might be used
+        'strict_comparison' => false, // Cannot do this globally
+        'types_spaces' => ['space' => 'single'], // Clarity for separate classes
+        'yoda_style' => ['equal' => false, 'identical' => false], // Yoda style is not used
+        'header_comment' => ['header' => $header],
     ])
     ->setFinder($finder);
 

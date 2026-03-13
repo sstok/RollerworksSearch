@@ -34,7 +34,9 @@ final class CachedConditionGeneratorTest extends DbalTestCase
 
     public const CACHE_KEY = 'da80730b87c4750f8c619ac64b679586ac2f9d86c53508d1a53a7c0341b4e363';
 
-    /** @test */
+    /**
+     * @test
+     */
     public function get_where_clause_no_cache(): void
     {
         $this->cacheDriver
@@ -72,7 +74,9 @@ final class CachedConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function get_where_clause_with_cache(): void
     {
         $this->cacheDriver
@@ -94,11 +98,14 @@ final class CachedConditionGeneratorTest extends DbalTestCase
 
         QueryBuilderAssertion::assertQueryBuilderEquals(
             $this->conditionGenerator,
-            " WHERE me = 'foo'", [':search' => [1, 'integer']]
+            " WHERE me = 'foo'",
+            [':search' => [1, 'integer']]
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_sorting(): void
     {
         $this->cacheDriver
@@ -170,7 +177,9 @@ final class CachedConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function does_not_store_empty_condition(): void
     {
         $searchCondition = SearchConditionBuilder::create($this->getFieldSet())->getSearchCondition();
@@ -200,7 +209,9 @@ final class CachedConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function cannot_apply_multiple_times(): void
     {
         set_error_handler(
@@ -220,7 +231,9 @@ final class CachedConditionGeneratorTest extends DbalTestCase
         $this->conditionGenerator->apply();
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_existing_caches_and_primary_cond(): void
     {
         $cacheDriverProphecy = $this->prophesize(Cache::class);
@@ -257,15 +270,19 @@ final class CachedConditionGeneratorTest extends DbalTestCase
 
         QueryBuilderAssertion::assertQueryBuilderEquals(
             $cachedConditionGenerator,
-            " WHERE me = 'foo'", ['search_1' => ['duck', 'text']],
+            " WHERE me = 'foo'",
+            ['search_1' => ['duck', 'text']],
         );
         QueryBuilderAssertion::assertQueryBuilderEquals(
             $cachedConditionGenerator2,
-            " WHERE you = 'me' AND me = 'foo'", ['search_2' => ['roll', 'text']],
+            " WHERE you = 'me' AND me = 'foo'",
+            ['search_2' => ['roll', 'text']],
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function get_where_clause_invalid_cache(): void
     {
         $cacheKey = '';

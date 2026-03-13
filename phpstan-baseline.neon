@@ -1,6 +1,18 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Strict comparison using \=\=\= between non\-empty\-array and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: lib/ApiPlatform/Serializer/InvalidSearchConditionNormalizer.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Symfony\\Component\\OptionsResolver\\OptionsResolver and ''setOptions'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: lib/Core/Extension/Core/Type/BooleanType.php
+
+		-
 			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
 			identifier: staticMethod.alreadyNarrowedType
 			count: 2
@@ -217,6 +229,12 @@ parameters:
 			path: lib/Doctrine/Orm/Tests/OrmTestCase.php
 
 		-
+			message: '#^Parameter &\$mappings @param\-out type of method Rollerworks\\Component\\Search\\Elasticsearch\\QueryConditionGenerator\:\:getGroupMappings\(\) expects array\<string, Rollerworks\\Component\\Search\\Elasticsearch\\FieldMapping\>, array given\.$#'
+			identifier: paramOut.type
+			count: 5
+			path: lib/Elasticsearch/QueryConditionGenerator.php
+
+		-
 			message: '#^Variable \$nestedBool might not be defined\.$#'
 			identifier: variable.undefined
 			count: 2
@@ -227,6 +245,12 @@ parameters:
 			identifier: varTag.nativeType
 			count: 1
 			path: lib/Elasticsearch/Tests/ElasticsearchFactoryTest.php
+
+		-
+			message: '#^Parameter \#1 \$index of method Elastica\\Search\:\:addIndex\(\) expects Elastica\\Index, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: lib/Elasticsearch/Tests/Functional/FunctionalElasticsearchTestCase.php
 
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'

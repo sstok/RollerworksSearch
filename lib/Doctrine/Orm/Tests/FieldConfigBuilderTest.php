@@ -94,7 +94,9 @@ final class FieldConfigBuilderTest extends TestCase
         $this->em->getClassMetadata($entityClass)->willReturn($classMetadata->reveal());
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function resolve_with_default_entity(): void
     {
         $this->expectClassMetadata(ECommerceInvoice::class, [
@@ -131,7 +133,9 @@ final class FieldConfigBuilderTest extends TestCase
         self::assertEquals(new QueryField('customer_name#last_name', $fieldSet->get('customer_name'), 'string', 'last_name', 'C', ECommerceCustomer::class), $fields['customer_name']['last_name']);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function resolve_with_full_field_mapping(): void
     {
         $this->expectClassMetadata(ECommerceInvoice::class, [
@@ -158,7 +162,9 @@ final class FieldConfigBuilderTest extends TestCase
         self::assertEquals(new QueryField('credit_parent#0', $fieldSet->get('credit_parent'), 'integer', 'parent', 'I', ECommerceInvoice::class), $fields['credit_parent']['0']);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function fails_to_resolve_with_join_association(): void
     {
         $this->expectClassMetadata(
@@ -193,7 +199,9 @@ final class FieldConfigBuilderTest extends TestCase
         $fieldConfigBuilder->setField('credit_parent', 'parent', 'I', null, 'parent_id');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function fails_when_no_entity_is_provided(): void
     {
         $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $this->getFieldSet());
@@ -204,7 +212,9 @@ final class FieldConfigBuilderTest extends TestCase
         $fieldConfigBuilder->setField('id', 'id');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function fails_to_resolve_with_multi_column_join_association(): void
     {
         $this->expectClassMetadata(

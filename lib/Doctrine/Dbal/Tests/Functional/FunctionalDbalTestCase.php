@@ -207,7 +207,7 @@ abstract class FunctionalDbalTestCase extends DbalTestCase
                         ArrayParameterType::STRING => 'string',
                         ArrayParameterType::BINARY => 'binary',
                         ArrayParameterType::ASCII => 'string',
-                        default => 'string'
+                        default => 'string',
                     };
                 } elseif (\is_object($type)) {
                     $type = Type::lookupName($type);

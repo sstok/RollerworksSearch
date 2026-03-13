@@ -73,7 +73,9 @@ final class AgeConversionTest extends FunctionalDbalTestCase
         return $build ? $fieldSet->getFieldSet('user') : $fieldSet;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_date(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -87,7 +89,9 @@ final class AgeConversionTest extends FunctionalDbalTestCase
         $this->assertRecordsAreFound($condition, [1, 3]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_age(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())

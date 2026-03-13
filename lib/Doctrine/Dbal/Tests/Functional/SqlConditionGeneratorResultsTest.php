@@ -243,37 +243,49 @@ final class SqlConditionGeneratorResultsTest extends FunctionalDbalTestCase
         return $build ? $fieldSet->getFieldSet('invoice') : $fieldSet;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_with_id(): void
     {
         $this->makeTest('id: 1, 5;', [1, 5]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_with_combined_field(): void
     {
         $this->makeTest('customer-name: Pang, Leroy;', [1, 2, 3, 4]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_with_range_and_excluding(): void
     {
         $this->makeTest('id: 1~7[, !2;', [1, 3, 4, 5, 6]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_customer_birthday(): void
     {
         $this->makeTest('customer-birthday: "2000-05-15";', range(2, 4));
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_customer_birthdays(): void
     {
         $this->makeTest('customer-birthday: "2000-05-15", "1980-06-10";', [2, 3, 4]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_date_relative(): void
     {
         $this->makeTest('pub-date: >"7 days";', [8, 9]);
@@ -284,31 +296,41 @@ final class SqlConditionGeneratorResultsTest extends FunctionalDbalTestCase
         $this->makeTest('pub-date: >2015-05-10, >"-1 years", <"6 months";', [7, 8]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_with_or_group(): void
     {
         $this->makeTest('* customer-birthday: "1980-11-20"; pub-date: "2015-05-01";', [1, 5]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_pub_date_limited_by_price(): void
     {
         $this->makeTest('pub-date: "2015-05-10"; total: "50.00"', [4]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_customer_and_status(): void
     {
         $this->makeTest('customer: 2; status: concept;', [3]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_customer_and_status_and_total(): void
     {
         $this->makeTest('customer: 2; status: paid; total: "90.00";', [2]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_customer_and_status_and_total_with_primary_cond(): void
     {
         $this->makeTestWithPrimaryCond('customer: 2;', 'customer: 3;', []);
@@ -316,20 +338,26 @@ final class SqlConditionGeneratorResultsTest extends FunctionalDbalTestCase
         $this->makeTestWithPrimaryCond('customer: 2;', 'status: paid;', [2]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_customer_and_status_or_price(): void
     {
         $this->makeTest('customer: 2; *(status: paid; total: "50.00";)', [2, 4]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_status_and_label_or_quantity_limited_by_price(): void
     {
         // Note there is no row with quantity 5, which is resolved as its in an OR'ed group
         $this->makeTest('status: published; *(row-quantity: 5; row-label: ~*"repair"; (row-price: "50.00"));', [4]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_finds_by_excluding_equals_pattern(): void
     {
         $this->makeTest('row-label: ~=Armor, ~=sword;', [2]); // Invoice 3 doesn't match as "sword" is lowercase

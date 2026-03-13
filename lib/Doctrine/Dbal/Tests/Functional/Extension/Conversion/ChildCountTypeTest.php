@@ -83,7 +83,9 @@ final class ChildCountTypeTest extends FunctionalDbalTestCase
         return $build ? $fieldSet->getFieldSet('user') : $fieldSet;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function matches_count(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())

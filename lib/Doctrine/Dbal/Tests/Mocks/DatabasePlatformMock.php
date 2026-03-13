@@ -43,55 +43,73 @@ class DatabasePlatformMock extends AbstractPlatform
         return $this->_prefersSequences;
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getSequenceNextValSQL($sequence): string
     {
         return $this->_sequenceNextValSql;
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getBooleanTypeDeclarationSQL(array $column): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getIntegerTypeDeclarationSQL(array $column): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getBigIntTypeDeclarationSQL(array $column): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getSmallIntTypeDeclarationSQL(array $column): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     protected function _getCommonIntegerTypeDeclarationSQL(array $column): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getVarcharTypeDeclarationSQL(array $column): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getClobTypeDeclarationSQL(array $column): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));
     }
 
-    /** @override */
+    /**
+     * @override
+     */
     public function getCurrentDatabaseExpression(): string
     {
         throw new \LogicException(\sprintf('Method %s not implemented', __METHOD__));

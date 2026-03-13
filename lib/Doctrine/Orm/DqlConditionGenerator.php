@@ -41,7 +41,7 @@ final class DqlConditionGenerator
 {
     private string $whereClause;
 
-    /** @var ArrayCollection<string, array{mixed, string|null}> */
+    /** @var ArrayCollection<string, array{0: mixed, 1: string}> */
     private ArrayCollection $parameters;
 
     public function __construct(
@@ -65,7 +65,7 @@ final class DqlConditionGenerator
     }
 
     /**
-     * @return ArrayCollection<string, array{mixed, string|null}>
+     * @return ArrayCollection<string, array{0: mixed, 1: string}>
      */
     public function getParameters(): ArrayCollection
     {

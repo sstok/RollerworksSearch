@@ -31,7 +31,9 @@ final class DoctrineOrmFactoryTest extends OrmTestCase
 {
     protected DoctrineOrmFactory $factory;
 
-    /** @test */
+    /**
+     * @test
+     */
     public function create_condition_generator(): void
     {
         $qb = $this->getQuery();
@@ -41,7 +43,9 @@ final class DoctrineOrmFactoryTest extends OrmTestCase
         self::assertSame($qb, $conditionGenerator->getQueryBuilder());
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function cached_dql_condition_generator(): void
     {
         $qb = $this->getQuery();

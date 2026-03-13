@@ -128,7 +128,9 @@ class TestUtil
         }
     }
 
-    /** @psalm-return array<string, mixed> */
+    /**
+     * @psalm-return array<string, mixed>
+     */
     private static function getPrivilegedConnectionParameters(): array
     {
         if (isset($GLOBALS['privileged_db_driver'])) {
@@ -141,7 +143,9 @@ class TestUtil
         return $parameters;
     }
 
-    /** @psalm-return array<string, mixed> */
+    /**
+     * @psalm-return array<string, mixed>
+     */
     private static function getTestConnectionParameters(): array
     {
         if (! isset($GLOBALS['db_driver'])) {

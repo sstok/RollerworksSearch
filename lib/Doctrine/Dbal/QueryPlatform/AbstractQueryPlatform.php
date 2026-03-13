@@ -28,7 +28,7 @@ use Rollerworks\Component\Search\Value\PatternMatch;
  */
 abstract class AbstractQueryPlatform
 {
-    /** @var ArrayCollection<string, array{mixed, string|null}> */
+    /** @var ArrayCollection<string, array{0: mixed, 1: string}> */
     private readonly ArrayCollection $parameters;
 
     private int $parameterIdx = -1;
@@ -55,6 +55,10 @@ abstract class AbstractQueryPlatform
 
     public function createParamReferenceFor(mixed $value, ?string $type = null): string
     {
+        if ($type === null) {
+            $type = 'string';
+        }
+
         $name = 'search_' . (++$this->parameterIdx);
         $this->parameters->set($name, [$value, $type]);
 
@@ -116,7 +120,7 @@ abstract class AbstractQueryPlatform
     }
 
     /**
-     * @return ArrayCollection<string, array{mixed, string|null}>
+     * @return ArrayCollection<string, array{0: mixed, 1: string}>
      */
     public function getParameters(): ArrayCollection
     {

@@ -28,7 +28,9 @@ final class DoctrineDbalFactoryTest extends DbalTestCase
 {
     protected DoctrineDbalFactory $factory;
 
-    /** @test */
+    /**
+     * @test
+     */
     public function create_condition_generator(): void
     {
         $queryBuilder = $this->getConnectionMock()->createQueryBuilder();
@@ -41,7 +43,9 @@ final class DoctrineDbalFactoryTest extends DbalTestCase
         self::assertSame($queryBuilder, $conditionGenerator->getQueryBuilder());
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function create_cache_condition_generator(): void
     {
         $queryBuilder = $this->getConnectionMock()->createQueryBuilder();

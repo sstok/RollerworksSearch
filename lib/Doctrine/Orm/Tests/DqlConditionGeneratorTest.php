@@ -82,7 +82,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         return $conditionGenerator;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function simple_query(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -110,8 +112,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                 FROM invoices i0_
                          INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?)))
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -119,7 +120,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function query_with_multiple_fields(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -152,8 +155,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                     invoices i0_
                         INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?)) AND ((i0_.status = ? OR i0_.status = ?)))
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -163,7 +165,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function empty_result(): void
     {
         $condition = new SearchCondition($this->getFieldSet(), new ValuesGroup());
@@ -172,7 +176,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $this->assertDqlCompiles($conditionGenerator, '');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excludes(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -188,7 +194,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $this->assertDqlCompiles($conditionGenerator, 'WHERE (((C.id <> :search_0 AND C.id <> :search_1)))');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function includes_and_excludes(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -204,7 +212,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $this->assertDqlCompiles($conditionGenerator, 'WHERE ((C.id = :search_0 AND C.id <> :search_1))');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_primary_condition_and_user_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -243,8 +253,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                     invoices i0_
                         INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?))) AND (((i0_.invoice_id = ? OR i0_.invoice_id = ?)) AND ((i0_.status = ? OR i0_.status = ?)))
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -256,7 +265,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_primary_condition_and_no_user_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -291,8 +302,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                     invoices i0_
                         INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?)) AND ((i0_.status = ? OR i0_.status = ?)))
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -302,7 +312,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sorting_single_field(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -332,8 +344,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                          INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?)))
                 ORDER BY i0_.invoice_id DESC
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -341,7 +352,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sorting_multiple_fields(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -372,8 +385,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                          INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?)))
                 ORDER BY c1_.id ASC, i0_.invoice_id DESC
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -381,7 +393,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sorting_only(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -410,7 +424,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sorting_with_primary_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -442,8 +458,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                          INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?)))
                 ORDER BY i0_.invoice_id DESC
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -451,7 +466,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sorting_user_and_primary_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -484,8 +501,7 @@ final class DqlConditionGeneratorTest extends OrmTestCase
                          INNER JOIN customers c1_ ON i0_.customer = c1_.id
                 WHERE (((c1_.id = ? OR c1_.id = ?)))
                 ORDER BY i0_.invoice_id DESC, c1_.id DESC
-                SQL
-            ,
+                SQL,
             [
                 'search_0' => [2, 'integer'],
                 'search_1' => [5, 'integer'],
@@ -493,7 +509,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sorting_only_with_primary_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -524,7 +542,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function ranges(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -545,7 +565,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluded_ranges(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -566,7 +588,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function single_comparison(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -581,7 +605,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $this->assertDqlCompiles($conditionGenerator, 'WHERE ((C.id > :search_0))');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function multiple_comparisons(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -597,7 +623,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $this->assertDqlCompiles($conditionGenerator, 'WHERE (((C.id > :search_0 AND C.id < :search_1)))');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function multiple_comparisons_with_groups(): void
     {
         // Use two subgroups here as the comparisons are AND to each other
@@ -626,7 +654,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluding_comparisons(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -642,7 +672,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $this->assertDqlCompiles($conditionGenerator, 'WHERE ((C.id <> :search_0 AND C.id <> :search_1))');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluding_comparisons_with_normal(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -663,7 +695,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function pattern_matchers(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -723,7 +757,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         }
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_groups(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -745,7 +781,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         $this->assertDqlCompiles($conditionGenerator, 'WHERE (((C.id = :search_0)) OR ((C.id = :search_1)))');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_group_with_root_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -768,7 +806,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function or_group_root(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet(), ValuesGroup::GROUP_LOGICAL_OR)
@@ -789,7 +829,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_or_group(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -814,7 +856,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function column_conversion(): void
     {
         $converter = $this->createMock(ColumnConversion::class);
@@ -857,7 +901,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function value_conversion(): void
     {
         $emConfig = $this->em->getConfiguration();
@@ -896,7 +942,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function apply_to_query_builder(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -923,7 +971,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function apply_without_result(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())->getSearchCondition();
@@ -936,7 +986,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function query_with_prepend_and_primary_cond(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -967,7 +1019,9 @@ final class DqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function empty_query_with_prepend_and_primary_cond(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())

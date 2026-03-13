@@ -39,7 +39,9 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
 
     public const CACHE_KEY = 'df58623bc959d1cf34d360c31f4d57b21ee51ffb5179059507b90c47035075dd';
 
-    /** @test */
+    /**
+     * @test
+     */
     public function get_where_clause_no_cache(): void
     {
         $this->cacheDriver
@@ -93,7 +95,9 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
         self::assertQueryParametersEquals($parameters, $queryBuilder);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function get_where_clause_with_cache(): void
     {
         $this->cacheDriver
@@ -116,7 +120,9 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
         $this->assertQueryBuilderEquals(" WHERE me = 'foo'", ['search' => [1, 'integer']]);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_sorting(): void
     {
         $this->cacheDriver
@@ -188,7 +194,9 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function does_not_store_empty_condition(): void
     {
         $searchCondition = SearchConditionBuilder::create($this->getFieldSet())->getSearchCondition();
@@ -216,7 +224,9 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
         $this->assertQueryBuilderEquals('', []);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function cannot_apply_multiple_times(): void
     {
         set_error_handler(
@@ -236,7 +246,9 @@ final class CachedDqlConditionGeneratorTest extends OrmTestCase
         $this->conditionGenerator->apply();
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function with_existing_caches_and_primary_cond(): void
     {
         $cacheDriverProphecy = $this->prophesize(CacheInterface::class);

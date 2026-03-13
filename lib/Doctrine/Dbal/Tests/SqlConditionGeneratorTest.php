@@ -57,7 +57,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         return $conditionGenerator;
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function simple_query(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -77,7 +79,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function empty_query(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -91,7 +95,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         QueryBuilderAssertion::assertQueryBuilderEquals($this->getConditionGenerator($condition), '');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function query_with_primary_cond(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -128,7 +134,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function empty_query_with_primary_cond(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -161,7 +169,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function query_with_multiple_fields(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -190,7 +200,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function query_with_combined_field(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -217,7 +229,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function query_with_combined_field_and_custom_alias(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -244,7 +258,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function empty_condition(): void
     {
         $condition = new SearchCondition($this->getFieldSet(), new ValuesGroup());
@@ -256,7 +272,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excludes(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -279,7 +297,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function includes_and_excludes(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -302,7 +322,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function ranges(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -334,7 +356,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluded_ranges(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -367,7 +391,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function single_comparison(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -388,7 +414,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function multiple_comparisons(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -411,7 +439,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function multiple_comparisons_with_groups(): void
     {
         // Use two subgroups here as the comparisons are AND to each other
@@ -446,7 +476,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluding_comparisons(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -469,7 +501,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluding_comparisons_with_normal(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -496,7 +530,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function pattern_matchers(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -529,7 +565,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_groups(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -554,7 +592,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_group_with_root_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -581,7 +621,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function or_group_root(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet(), ValuesGroup::GROUP_LOGICAL_OR)
@@ -606,7 +648,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_or_group(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -635,7 +679,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function column_conversion(): void
     {
         $converter = $this->createMock(ColumnConversion::class);
@@ -676,7 +722,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function value_conversion(): void
     {
         $converter = $this->createMock(ValueConversion::class);
@@ -716,7 +764,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function conversion_strategy_value(): void
     {
         $converter = $this->createMock(ValueConversion::class);
@@ -758,7 +808,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function conversion_strategy_column(): void
     {
         $converter = $this->createMock(ColumnConversion::class);
@@ -798,7 +850,9 @@ final class SqlConditionGeneratorTest extends DbalTestCase
         );
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function lazy_conversion_loading(): void
     {
         $converter = $this->createMock(ColumnConversion::class);

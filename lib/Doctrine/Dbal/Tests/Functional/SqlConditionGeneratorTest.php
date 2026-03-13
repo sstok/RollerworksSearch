@@ -80,7 +80,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $conditionGenerator->setField('label', 'label', 'i', 'string');
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function simple_query(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -94,7 +96,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function query_with_embedded_values(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -108,7 +112,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excludes(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -122,7 +128,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function includes_and_excludes(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -136,7 +144,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function ranges(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -152,7 +162,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluded_ranges(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -168,7 +180,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function single_comparison(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -181,7 +195,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function multiple_comparisons(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -195,7 +211,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function multiple_comparisons_with_groups(): void
     {
         // Use two subgroups here as the comparisons are AND to each other
@@ -218,7 +236,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluding_comparisons(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -232,7 +252,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function excluding_comparisons_with_normal(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -247,7 +269,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function pattern_matchers(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -262,7 +286,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_groups(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -278,7 +304,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_group_with_root_condition(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -296,7 +324,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function or_group_root(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet(), ValuesGroup::GROUP_LOGICAL_OR)
@@ -312,7 +342,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function sub_or_group(): void
     {
         $condition = SearchConditionBuilder::create($this->getFieldSet())
@@ -332,7 +364,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function column_conversion(): void
     {
         $type = $this->conn->getDatabasePlatform() instanceof AbstractMySQLPlatform ? 'SIGNED' : 'INTEGER';
@@ -357,7 +391,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function value_conversion(): void
     {
         $type = $this->conn->getDatabasePlatform() instanceof AbstractMySQLPlatform ? 'SIGNED' : 'INTEGER';
@@ -382,7 +418,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function conversion_strategy(): void
     {
         $date = new \DateTimeImmutable('2001-01-15', new \DateTimeZone('UTC'));
@@ -403,7 +441,9 @@ final class SqlConditionGeneratorTest extends FunctionalDbalTestCase
         $this->assertQueryIsExecutable($condition);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function conversion_strategy2(): void
     {
         $date = new \DateTimeImmutable('2001-01-15', new \DateTimeZone('UTC'));
