@@ -1,3 +1,11 @@
+UPGRADE FROM 2.0-BETA13 to 2.0-BETA14
+=====================================
+
+### Core
+
+ * The `SearchOrder` now expects an associative array of field-names and direction.
+   Passing a `ValuesGroup` is deprecated, and will be removed in v3.0.
+
 UPGRADE FROM 2.0-BETA10 to 2.0-BETA13
 =====================================
 

@@ -41,7 +41,7 @@ final class FieldConfigBuilder
 
     public function setField(string $mappingName, string $property, ?string $alias = null, ?string $entity = null, ?string $type = null): void
     {
-        $mappingIdx = null;
+        $mappingIdx = '';
         $fieldName = $mappingName;
 
         if ($entity === null && $this->defaultEntity === null) {
