@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rollerworks\Component\Search\Doctrine\Orm;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Rollerworks\Component\Search\Field\OrderField;
 use Rollerworks\Component\Search\FieldSet;
 
 /**
@@ -48,11 +49,15 @@ final class FieldConfigBuilder
             throw new \RuntimeException('No default entity is set, either provide the entity or set a default entity first.');
         }
 
-        if (mb_strpos($mappingName, '#') !== false) {
+        if (str_contains($mappingName, '#')) {
             [$fieldName, $mappingIdx] = explode('#', $mappingName, 2);
             unset($this->fields[$fieldName]['']);
         } else {
             $this->fields[$fieldName] = [];
+        }
+
+        if (OrderField::isOrder($fieldName) && str_contains($mappingName, '#')) {
+            throw new \RuntimeException(\sprintf('Ordering field "%s" cannot be registered with multiple mapping.', $fieldName));
         }
 
         [$entity, $property] = $this->getEntityAndProperty(
