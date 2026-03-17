@@ -84,7 +84,7 @@ final class DqlConditionGenerator
 
         $fields = $configBuilder->getFields();
 
-        foreach ($order->getFields() as $fieldName => $direction) {
+        foreach ($order->getSorting() as $fieldName => $direction) {
             if (! isset($fields[$fieldName])) {
                 continue;
             }
