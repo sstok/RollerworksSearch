@@ -7,11 +7,17 @@ RollerworksSearch is a powerful search-system for PHP.
 Created to make searching in a PHP powered application as simple and fast as possible.
 
 Whether you want to search for users in your SQL database, want to provide a 
-powerful search system for searching products using an ElasticSearch back-end 
+powerful search system for searching products using an ElasticSearch back-end, 
 or are looking for a way to abstract filtering for a reporter.
- 
- ##### :warning: RollerworksSearch v2.0 is not stable yet, backward compatible changes should be expected.
- ##### If you are looking for a stable version, please wait for a final v2.0 release.
+
+> [!IMPORTANT]
+> RollerworksSearch v2.0 is fully not stable yet, a stable release is
+> expected no later than 31th of March 2026.
+> 
+> Feel free to try out the project and report any issues you find.
+> 
+> Elasticsearch support is considered experimental, and might not work as expected.
+> Please report any issues you find.
 
 ### How about complex data structures?
 
@@ -33,13 +39,13 @@ Including grouping and nesting for the best possible result.
 
 ## Features
 
-RollerworksSearch provides you with most of the features you would expect
+RollerworksSearch provides you with most of the features you can expect
 from a search system, including:
 
 * Localized input processing using the StringQuery format;
 * User-friendly format validation;
 * Integration with API-Platform;
-* Integration for Symfony 4.4 and up (Symfony Flex supported).
+* Integration for Symfony 6.4 and up (Symfony Flex supported).
 
 And support for the most poplar storage systems.
 
