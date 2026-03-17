@@ -22,6 +22,7 @@ use Rollerworks\Component\Search\Doctrine\Orm\FieldConfigBuilder;
 use Rollerworks\Component\Search\Doctrine\Orm\OrmQueryField as QueryField;
 use Rollerworks\Component\Search\Extension\Core\Type\IntegerType;
 use Rollerworks\Component\Search\Extension\Core\Type\TextType;
+use Rollerworks\Component\Search\Field\OrderFieldType;
 use Rollerworks\Component\Search\Searches;
 use Rollerworks\Component\Search\SearchFactory;
 use Rollerworks\Component\Search\Tests\Doctrine\Orm\Fixtures\Entity\ECommerceCustomer;
@@ -210,6 +211,23 @@ final class FieldConfigBuilderTest extends TestCase
         $this->expectExceptionMessage('No default entity is set, either provide the entity or set a default entity first.');
 
         $fieldConfigBuilder->setField('id', 'id');
+    }
+
+    /**
+     * @test
+     */
+    public function fails_when_ordering_with_multi_mapping(): void
+    {
+        $this->getFieldSet(false)
+            ->add('@id', OrderFieldType::class)
+            ->getFieldSet('invoice');
+
+        $fieldConfigBuilder = new FieldConfigBuilder($this->em->reveal(), $this->getFieldSet());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Ordering field "@id" cannot be registered with multiple mapping.');
+
+        $fieldConfigBuilder->setField('@id#1', 'id', 'I', 'Invoice');
     }
 
     /**

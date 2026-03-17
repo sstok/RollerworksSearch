@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rollerworks\Component\Search\Doctrine\Dbal;
 
 use Rollerworks\Component\Search\Doctrine\Dbal\Query\QueryField;
+use Rollerworks\Component\Search\Field\OrderField;
 use Rollerworks\Component\Search\FieldSet;
 
 /**
@@ -29,19 +30,24 @@ final class FieldConfigurationSet
     ) {
     }
 
-    public function setField(string $fieldName, string $column, ?string $alias = null, string $type = 'string'): void
+    public function setField(string $mappingName, string $column, ?string $alias = null, string $type = 'string'): void
     {
-        $mappingIdx = null;
+        $mappingIdx = '';
+        $fieldName = $mappingName;
 
-        if (mb_strpos($fieldName, '#') !== false) {
-            [$fieldName, $mappingIdx] = explode('#', $fieldName, 2);
+        if (str_contains($mappingName, '#')) {
+            [$fieldName, $mappingIdx] = explode('#', $mappingName, 2);
             unset($this->fields[$fieldName]['']);
         } else {
-            $this->fields[$fieldName] = [];
+            $this->fields[$mappingName] = [];
+        }
+
+        if (OrderField::isOrder($fieldName) && str_contains($mappingName, '#')) {
+            throw new \RuntimeException(\sprintf('Ordering field "%s" cannot be registered with multiple mapping.', $fieldName));
         }
 
         $this->fields[$fieldName][$mappingIdx] = new QueryField(
-            $fieldName . ($mappingIdx !== null ? "#{$mappingIdx}" : ''),
+            $mappingName,
             $this->fieldSet->get($fieldName),
             $type,
             $column,
