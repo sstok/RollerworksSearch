@@ -34,5 +34,9 @@ parameters:
             identifier: argument.type
             path: lib/Core/Tests/SearchConditionSerializerTest.php
 
+        -
+            # Forward compatible
+            message: '#^Call to function method_exists\(\) with Rollerworks\\Component\\Search\\Input\\Validator and ''initialize'' will always evaluate to true\.$#'
+            path: lib/Core/Input/*.php
 
         - '#Call to an undefined static method Carbon\\Translator\:\:get\(\)#'
