@@ -15,9 +15,10 @@ or are looking for a way to abstract filtering for a reporter.
 > expected no later than 31th of March 2026.
 > 
 > Feel free to try out the project and report any issues you find.
-> 
-> Elasticsearch support is considered experimental, and might not work as expected.
-> Please report any issues you find.
+
+> [!WARNING]
+> Elasticsearch support is [currently broken](https://github.com/rollersearch/search/issues/347)
+> and might not be fixed until the next stable release (after v2.0.0).
 
 ### How about complex data structures?
 
