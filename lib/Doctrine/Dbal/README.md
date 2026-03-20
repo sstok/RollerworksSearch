@@ -1,10 +1,10 @@
 RollerworksSearch Doctrine DBAL extension
 =========================================
 
-This package provides the Doctrine DBAL extension for [RollerworksSearch][1].
+This package provides the Doctrine DBAL integration for [RollerworksSearch][1].
 
-If you'd like to contribute to this project, please see the [contributing guide lines][2]
-for more information.
+If you'd like to contribute to this project, please go the
+main [RollerworksSearch][1] repository and read the [Contributing][2] section.
 
 Installation
 ------------
