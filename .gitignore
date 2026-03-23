@@ -1,12 +1,13 @@
-/phpunit.xml
-/composer.lock
-*.phar
+composer.lock
 /vendor/
-/.php_cs.cache
-build/**
-/var/
+/var
 
+phpunit.xml
 .phpunit.result.cache
-/lib/Symfony/SearchBundle/Tests/Functional/Application/var/
+.phpunit.cache/
+.phpunit
+
 .php-cs-fixer.cache
-lib/Symfony/SearchBundle/Tests/Functional/Application/config/reference.php
+
+/lib/Symfony/SearchBundle/Tests/Functional/Application/var/
+/lib/Symfony/SearchBundle/Tests/Functional/Application/config/reference.php
