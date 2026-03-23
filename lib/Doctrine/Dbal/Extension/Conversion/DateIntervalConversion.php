@@ -23,7 +23,7 @@ final class DateIntervalConversion implements ValueConversion
     /**
      * @param CarbonInterval|\DateTimeImmutable $value
      */
-    public function convertValue($value, array $options, ConversionHints $hints): string
+    public function convertValue(mixed $value, array $options, ConversionHints $hints): string
     {
         if ($value instanceof \DateTimeImmutable) {
             return $hints->createParamReferenceFor($value, Types::DATETIME_IMMUTABLE);

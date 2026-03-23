@@ -35,7 +35,7 @@ abstract class FunctionalDbalTestCase extends DbalTestCase
      * Shared connection for setting up the database in a single place
      * during class setup and tear down.
      */
-    private static ?Connection $sharedConn;
+    private static ?Connection $sharedConn = null;
 
     protected Connection $conn;
 

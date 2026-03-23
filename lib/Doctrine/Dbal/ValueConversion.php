@@ -28,7 +28,7 @@ interface ValueConversion
      * that can be used as a column's value.
      *
      * Used values must be registered as parameters using `$hints->createParamReferenceFor($value)`
-     * with an option DBAL Type as second argument (converted afterwards).
+     * with a DBAL Type as second argument (converted afterwards).
      *
      * @param mixed                $value   The "model" value format
      * @param array<string, mixed> $options Options of the Field configuration

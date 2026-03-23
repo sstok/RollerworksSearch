@@ -35,7 +35,7 @@ final class MoneyValueConversion implements ValueConversion, ColumnConversion
     /**
      * @param MoneyValue $value
      */
-    public function convertValue($value, array $options, ConversionHints $hints): string
+    public function convertValue(mixed $value, array $options, ConversionHints $hints): string
     {
         $sqlValue = $hints->createParamReferenceFor($this->formatter->format($value->value));
         $castType = $this->getCastType($this->currencies->subunitFor($value->value->getCurrency()), $hints);
