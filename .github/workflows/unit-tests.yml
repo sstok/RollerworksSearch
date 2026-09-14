@@ -1,11 +1,22 @@
-name: CI
+name: Unit Tests
 on:
     push:
         branches:
+            - '*.*'
             - main
     pull_request:
-        branches:
-            - main
+
+defaults:
+    run:
+        shell: bash
+
+permissions:
+    contents: read
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
 env:
     ES_HTTP_PORT: '59200'
     ELASTICSEARCH_HOST: 'localhost'
