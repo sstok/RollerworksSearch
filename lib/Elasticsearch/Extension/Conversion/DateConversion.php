@@ -59,9 +59,9 @@ class DateConversion implements ValueConversion, QueryConversion
 
             case QueryPreparationHints::CONTEXT_COMPARISON:
                 /** @var Compare $value */
-                $operator = Generator::translateComparison($value->getOperator());
+                $operator = Generator::translateComparison($value->operator);
                 $query = [
-                    Generator::QUERY_RANGE => [$propertyName => [$operator => $value->getValue()]],
+                    Generator::QUERY_RANGE => [$propertyName => [$operator => $value->value]],
                 ];
 
                 break;
