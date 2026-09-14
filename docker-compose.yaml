@@ -1,14 +1,4 @@
-version: '3'
-
 services:
-    php:
-        depends_on:
-          - elasticsearch
-          - pgsql
-          - mariadb-server
-        image: rollerworks/search-dev:php-74
-        volumes:
-            - .:/srv/www:rw
 
     # Storage services
     pgsql:
@@ -34,16 +24,17 @@ services:
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.3.0
+        platform: linux/amd64
         environment:
             - "discovery.type=single-node"
             - "xpack.security.enabled=false"
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
         volumes:
-            - es-data:/usr/share/elasticsearch/data
+            - es-data-7:/usr/share/elasticsearch/data
         ports:
             - "59200:9200"
 
 volumes:
     pg-data: {}
     my-data: {}
-    es-data: {}
+    es-data-7: {}
