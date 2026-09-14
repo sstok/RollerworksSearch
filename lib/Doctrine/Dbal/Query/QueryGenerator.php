@@ -175,10 +175,10 @@ final class QueryGenerator
             $hints->context = ConversionHints::CONTEXT_RANGE_LOWER_BOUND;
 
             $column = $this->queryPlatform->getFieldColumn($mappingConfig, $mappingConfig->column, $hints);
-            $lowerBound = $this->queryPlatform->getValueAsSql($range->getLower(), $mappingConfig, $hints);
+            $lowerBound = $this->queryPlatform->getValueAsSql($range->lower, $mappingConfig, $hints);
 
             $hints->context = ConversionHints::CONTEXT_RANGE_UPPER_BOUND;
-            $upperBound = $this->queryPlatform->getValueAsSql($range->getUpper(), $mappingConfig, $hints);
+            $upperBound = $this->queryPlatform->getValueAsSql($range->upper, $mappingConfig, $hints);
 
             $query[] = \sprintf(
                 $this->getRangePattern($range, $exclude),
@@ -198,14 +198,14 @@ final class QueryGenerator
         $pattern = '(%s ';
 
         if ($exclude) {
-            $pattern .= ($range->isLowerInclusive() ? '<=' : '<');
+            $pattern .= ($range->inclusiveLower ? '<=' : '<');
             $pattern .= ' %s OR %s '; // lower-bound value, AND fieldname
-            $pattern .= ($range->isUpperInclusive() ? '>=' : '>');
+            $pattern .= ($range->inclusiveUpper ? '>=' : '>');
             $pattern .= ' %s'; // upper-bound value
         } else {
-            $pattern .= ($range->isLowerInclusive() ? '>=' : '>');
+            $pattern .= ($range->inclusiveLower ? '>=' : '>');
             $pattern .= ' %s AND %s '; // lower-bound value, AND fieldname
-            $pattern .= ($range->isUpperInclusive() ? '<=' : '<');
+            $pattern .= ($range->inclusiveUpper ? '<=' : '<');
             $pattern .= ' %s'; // upper-bound value
         }
 
@@ -225,7 +225,7 @@ final class QueryGenerator
         $hints->context = ConversionHints::CONTEXT_COMPARISON;
 
         foreach ($compares as $comparison) {
-            if ($exclude !== ($comparison->getOperator() === '<>')) {
+            if ($exclude !== ($comparison->operator === '<>')) {
                 continue;
             }
 
@@ -235,9 +235,9 @@ final class QueryGenerator
             $valuesQuery[] = \sprintf(
                 '%s %s %s',
                 $column,
-                $comparison->getOperator(),
+                $comparison->operator,
                 $this->queryPlatform->getValueAsSql(
-                    $comparison->getValue(),
+                    $comparison->value,
                     $mappingConfig,
                     $hints
                 )

@@ -84,13 +84,13 @@ class ConversionHints
                 return $this->originalValue;
 
             case self::CONTEXT_COMPARISON:
-                return $this->originalValue->getValue();
+                return $this->originalValue->value;
 
             case self::CONTEXT_RANGE_LOWER_BOUND:
-                return $this->originalValue->getLower();
+                return $this->originalValue->lower;
 
             case self::CONTEXT_RANGE_UPPER_BOUND:
-                return $this->originalValue->getUpper();
+                return $this->originalValue->upper;
 
             default:
                 throw new \LogicException(\sprintf('Unknown context "%s".', $this->context));

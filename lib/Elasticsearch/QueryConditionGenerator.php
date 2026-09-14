@@ -172,12 +172,12 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
 
     public static function generateRangeParams(Range $range): array
     {
-        $lowerCondition = $range->isLowerInclusive() ? self::COMPARISON_GREATER_OR_EQUAL : self::COMPARISON_GREATER;
-        $upperCondition = $range->isUpperInclusive() ? self::COMPARISON_LESS_OR_EQUAL : self::COMPARISON_LESS;
+        $lowerCondition = $range->inclusiveLower ? self::COMPARISON_GREATER_OR_EQUAL : self::COMPARISON_GREATER;
+        $upperCondition = $range->inclusiveUpper ? self::COMPARISON_LESS_OR_EQUAL : self::COMPARISON_LESS;
 
         return [
-            $lowerCondition => $range->getLower(),
-            $upperCondition => $range->getUpper(),
+            $lowerCondition => $range->lower,
+            $upperCondition => $range->upper,
         ];
     }
 
@@ -304,7 +304,7 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
                 foreach ($valuesBag->get(Compare::class) as $compare) {
                     $hints->context = QueryPreparationHints::CONTEXT_COMPARISON;
                     $compare = $this->convertCompareValue($compare, $valueConverter, $injectParams);
-                    $localIncludingType = $compare->getOperator() === self::COMPARISON_UNEQUAL ? self::CONDITION_NOT : $includingType;
+                    $localIncludingType = $compare->operator === self::COMPARISON_UNEQUAL ? self::CONDITION_NOT : $includingType;
                     $this->mergeQuery($bool, $localIncludingType, $this->prepareQuery($propertyName, $compare, $hints, $queryConverter, $nested, $join, $conditions, $options));
                 }
             }
@@ -391,25 +391,25 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
     private function convertRangeValues(Range $range, ?ValueConversion $converter, bool $injectParams): Range
     {
         return new Range(
-            $this->convertValue($range->getLower(), $converter, $injectParams),
-            $this->convertValue($range->getUpper(), $converter, $injectParams),
-            $range->isLowerInclusive(),
-            $range->isUpperInclusive()
+            $this->convertValue($range->lower, $converter, $injectParams),
+            $this->convertValue($range->upper, $converter, $injectParams),
+            $range->inclusiveLower,
+            $range->inclusiveUpper
         );
     }
 
     private function convertCompareValue(Compare $compare, ?ValueConversion $converter, bool $injectParams): Compare
     {
         return new Compare(
-            $this->convertValue($compare->getValue(), $converter, $injectParams),
-            $compare->getOperator()
+            $this->convertValue($compare->value, $converter, $injectParams),
+            $compare->operator
         );
     }
 
     private function convertMatcherValue(PatternMatch $patternMatch, ?ValueConversion $converter, bool $injectParams): PatternMatch
     {
         return new PatternMatch(
-            $this->convertValue($patternMatch->getValue(), $converter, $injectParams),
+            $this->convertValue($patternMatch->value, $converter, $injectParams),
             $patternMatch->getType(),
             $patternMatch->isCaseInsensitive()
         );
@@ -454,7 +454,7 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
                         /** @var Range $value */
                         $query = [
                             self::QUERY_IDS => [
-                                self::QUERY_VALUES => range($value->getLower(), $value->getUpper()),
+                                self::QUERY_VALUES => range($value->lower, $value->upper),
                             ],
                         ];
                     }
@@ -463,15 +463,15 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
 
                 case QueryPreparationHints::CONTEXT_COMPARISON:
                     /** @var Compare $value */
-                    $operator = self::translateComparison($value->getOperator());
+                    $operator = self::translateComparison($value->operator);
                     $query = [
-                        $propertyName => [$operator => $value->getValue()],
+                        $propertyName => [$operator => $value->value],
                     ];
 
-                    if ($value->getOperator() === self::COMPARISON_UNEQUAL) {
+                    if ($value->operator === self::COMPARISON_UNEQUAL) {
                         $query = [
                             self::QUERY_TERM => [
-                                $propertyName => [self::QUERY_VALUE => $value->getValue()],
+                                $propertyName => [self::QUERY_VALUE => $value->value],
                             ],
                         ];
                     }
@@ -542,27 +542,27 @@ use Rollerworks\Component\Search\Value\ValuesGroup;
             // XXX Allow to configure `fuzzy`, `operator`, `zero_terms_query` and `cutoff_frequency` (TextType).
             case PatternMatch::PATTERN_CONTAINS:
             case PatternMatch::PATTERN_NOT_CONTAINS:
-                $query[self::QUERY_MATCH] = [$propertyName => [self::QUERY => $patternMatch->getValue()]];
+                $query[self::QUERY_MATCH] = [$propertyName => [self::QUERY => $patternMatch->value]];
 
                 break;
 
             case PatternMatch::PATTERN_STARTS_WITH:
             case PatternMatch::PATTERN_NOT_STARTS_WITH:
-                $query[self::QUERY_PREFIX] = [$propertyName => [self::QUERY_VALUE => $patternMatch->getValue()]];
+                $query[self::QUERY_PREFIX] = [$propertyName => [self::QUERY_VALUE => $patternMatch->value]];
 
                 break;
 
             case PatternMatch::PATTERN_ENDS_WITH:
             case PatternMatch::PATTERN_NOT_ENDS_WITH:
                 $query[self::QUERY_WILDCARD] = [
-                    $propertyName => [self::QUERY_VALUE => '?' . addcslashes($patternMatch->getValue(), '?*')],
+                    $propertyName => [self::QUERY_VALUE => '?' . addcslashes($patternMatch->value, '?*')],
                 ];
 
                 break;
 
             case PatternMatch::PATTERN_EQUALS:
             case PatternMatch::PATTERN_NOT_EQUALS:
-                $query[self::QUERY_TERM] = [$propertyName => [self::QUERY_VALUE => $patternMatch->getValue()]];
+                $query[self::QUERY_TERM] = [$propertyName => [self::QUERY_VALUE => $patternMatch->value]];
 
                 break;
 

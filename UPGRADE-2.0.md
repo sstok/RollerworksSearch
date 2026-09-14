@@ -1,3 +1,11 @@
+UPGRADE FROM 2.0 to 2.1
+=======================
+
+### Core
+
+ * The `ValueHolder` getters are deprecated, access their public properties directly instead.
+   The `ValueHolder` getters will be removed in v3.0.
+
 UPGRADE FROM 2.0-BETA13 to 2.0-BETA14
 =====================================
 
